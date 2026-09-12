@@ -1,0 +1,148 @@
+---
+import menus from "../data/menus.json";
+---
+
+<div class="card" id="duel-box" style="text-align: center;">
+  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
+    둘 중 끌리는 걸 고르세요. 이긴 메뉴가 다음 도전자와 붙습니다.
+  </p>
+  <div id="duel-champ" style="margin-bottom: 10px; font-weight: 800;"></div>
+  <div
+    id="duel-stage"
+    style="display: flex; gap: 10px; justify-content: center; align-items: stretch;"
+  >
+    <button
+      id="duel-a"
+      style="flex:1; background:#fff; border:2px solid var(--line); border-radius:14px; padding:18px 8px; font-size:1.1rem; font-weight:900; color:var(--text); cursor:pointer;"
+    ></button>
+    <div style="align-self:center; font-weight:900; color:var(--muted);">VS</div>
+    <button
+      id="duel-b"
+      style="flex:1; background:#fff; border:2px solid var(--line); border-radius:14px; padding:18px 8px; font-size:1.1rem; font-weight:900; color:var(--text); cursor:pointer;"
+    ></button>
+  </div>
+  <div style="margin-top: 12px;">
+    <button class="cat-btn" id="duel-restart">🔄 처음부터</button>
+  </div>
+  <div id="duel-result" style="margin-top: 14px; min-height: 60px;"></div>
+</div>
+
+<script type="application/json" id="duel-data" set:html={JSON.stringify(menus)} />
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById("duel-box");
+    if (!box) return;
+    var MENUS = JSON.parse(document.getElementById("duel-data").textContent);
+    var COLORS = ["#FF6B6B", "#FFA94D", "#FFD43B", "#69DB7C", "#4DABF7", "#9775FA", "#F783AC", "#63E6BE"];
+
+    var champ = null;
+    var contender = null;
+    var wins = 0;
+
+    var champEl = document.getElementById("duel-champ");
+    var btnA = document.getElementById("duel-a");
+    var btnB = document.getElementById("duel-b");
+    var resultEl = document.getElementById("duel-result");
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function rand(except) {
+      var pool = MENUS.filter(function (m) { return !except || m.name !== except.name; });
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function render() {
+      champEl.innerHTML = wins > 0
+        ? "🏆 현재 챔피언: " + esc(champ.name) + " (" + wins + "연승)"
+        : "첫 대결을 시작합니다!";
+      btnA.innerHTML = esc(champ.name) + '<br><span style="font-size:.8rem;font-weight:400;color:var(--muted);">' + esc(champ.category) + "</span>";
+      btnB.innerHTML = esc(contender.name) + '<br><span style="font-size:.8rem;font-weight:400;color:var(--muted);">' + esc(contender.category) + "</span>";
+    }
+
+    function linkFor(item) {
+      return item.slug
+        ? '<p style="margin-top:8px;"><a href="/recipes/' +
+          esc(item.slug) +
+          '/" style="color:var(--accent);font-weight:800;">👉 ' +
+          esc(item.name) +
+          " 레시피 보기</a></p>"
+        : "";
+    }
+
+    function confetti() {
+      var c = document.createElement("canvas");
+      c.style.cssText =
+        "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;";
+      document.body.appendChild(c);
+      var x = c.getContext("2d");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      var parts = [];
+      for (var i = 0; i < 70; i++) {
+        parts.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+          y: window.innerHeight / 3,
+          vx: (Math.random() - 0.5) * 12,
+          vy: -Math.random() * 10 - 2,
+          s: Math.random() * 7 + 3,
+          col: COLORS[i % COLORS.length],
+          rot: Math.random() * Math.PI,
+        });
+      }
+      var frames = 0;
+      (function tick() {
+        x.clearRect(0, 0, c.width, c.height);
+        parts.forEach(function (p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.45;
+          p.rot += 0.15;
+          x.save();
+          x.translate(p.x, p.y);
+          x.rotate(p.rot);
+          x.fillStyle = p.col;
+          x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          x.restore();
+        });
+        if (++frames < 80) requestAnimationFrame(tick);
+        else c.remove();
+      })();
+    }
+
+    function vote(winner) {
+      if (winner.name === champ.name) {
+        wins++;
+      } else {
+        champ = winner;
+        wins = 1;
+      }
+      contender = rand(champ);
+      render();
+      if (wins > 0 && wins % 3 === 0) {
+        resultEl.innerHTML =
+          '<div style="font-weight:900;">🔥 ' + esc(champ.name) + " " + wins + "연승 중!</div>" + linkFor(champ);
+        confetti();
+      } else {
+        resultEl.innerHTML = "";
+      }
+    }
+
+    function start() {
+      champ = rand(null);
+      contender = rand(champ);
+      wins = 0;
+      resultEl.innerHTML = "";
+      render();
+    }
+
+    btnA.addEventListener("click", function () { vote(champ); });
+    btnB.addEventListener("click", function () { vote(contender); });
+    document.getElementById("duel-restart").addEventListener("click", start);
+    start();
+  })();
+</script>

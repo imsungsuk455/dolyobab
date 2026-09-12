@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SituationPick from "../components/SituationPick.astro";
+import Duel from "../components/Duel.astro";
+---
+
+<BaseLayout
+  title="골라먹기 | 돌려밥"
+  description="상황별 메뉴 뽑기와 메뉴 밸런스 게임. 지금 기분에 맞는 메뉴를 골라보세요."
+>
+  <h1 style="font-size:1.6rem;">🎯 골라먹기</h1>
+  <p style="color:var(--muted);">
+    돌림판 말고 다른 방식으로 고르고 싶을 때. 두 가지가 더 있습니다.
+  </p>
+
+  <h2 style="font-size:1.25rem; margin-top: 8px;">1. 상황별 뽑기</h2>
+  <SituationPick />
+
+  <h2 style="font-size:1.25rem; margin-top: 8px;">2. 메뉴 밸런스 게임</h2>
+  <Duel />
+
+  <section class="card">
+    <h2 style="font-size:1.1rem;">아직 못 정했나요?</h2>
+    <p>
+      <a href="/roulette/" style="color:var(--accent);font-weight:800;">🎡 원판 돌림판으로 정하기 →</a>
+    </p>
+  </section>
+</BaseLayout>
