@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Roulette from "../components/Roulette.astro";
+import { getCollection } from "astro:content";
+
+const recipes = await getCollection("recipes");
+const picks = recipes.slice(0, 3);
+---
+
+<BaseLayout
+  title="돌려밥 | 오늘 뭐 먹지? 10초 만에 메뉴 정하기"
+  description="점심·저녁 메뉴 고민 끝. 돌림판을 돌리면 오늘의 메뉴가 정해집니다. 자취생·직장인을 위한 초간단 레시피도 함께 제공합니다."
+>
+  <section style="text-align:center; padding: 12px 0 4px;">
+    <h1 style="font-size: 1.9rem; margin-bottom: 6px;">오늘 뭐 먹지?</h1>
+    <p style="color: var(--muted);">고민은 10초만. 나머지는 돌려밥에게 맡기세요.</p>
+  </section>
+
+  <Roulette />
+
+  <section class="card">
+    <h2 style="font-size:1.2rem;">🍳 오늘의 추천 레시피</h2>
+    {
+      picks.map((r) => (
+        <p style="margin:10px 0;">
+          <a href={`/recipes/${r.id}/`} style="color:var(--text);font-weight:800;text-decoration:none;">
+            {r.data.title}
+          </a>
+          <br />
+          <span style="color:var(--muted);font-size:0.9rem;">
+            {r.data.category} · {r.data.time ?? ""} · {r.data.description}
+          </span>
+        </p>
+      ))
+    }
+    <p><a href="/recipes/" style="color:var(--accent);font-weight:800;">레시피 전체 보기 →</a></p>
+  </section>
+
+  <section class="card">
+    <h2 style="font-size:1.2rem;">돌려밥이란?</h2>
+    <p>
+      돌려밥은 점심·저녁 메뉴를 정해주는 무료 서비스입니다. 카테고리를 고르고
+      돌림판을 돌리면 메뉴 하나가 추천됩니다. 모든 레시피는 운영자가 직접
+      해먹어본 것만 올립니다.
+    </p>
+    <h3 style="font-size:1.05rem;">자주 묻는 질문</h3>
+    <p>
+      <strong>Q. 추천은 어떻게 정해지나요?</strong><br />
+      선택한 카테고리 안에서 무작위로 하나를 뽑습니다. 바로 직전 결과는 제외되어
+      같은 메뉴가 연속으로 나오지 않습니다.
+    </p>
+    <p>
+      <strong>Q. 이용료가 있나요?</strong><br />
+      없습니다. 전부 무료이며 회원가입도 필요 없습니다.
+    </p>
+    <p>
+      <strong>Q. 레시피는 믿을 만한가요?</strong><br />
+      운영자가 직접 조리하고 사진을 찍은 것만 올립니다. 실패했던 포인트도 함께
+      적어두니 그대로 따라 하시면 됩니다.
+    </p>
+  </section>
+</BaseLayout>

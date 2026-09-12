@@ -1,0 +1,88 @@
+---
+import menus from "../data/menus.json";
+
+const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)))];
+---
+
+<div class="card" id="roulette-box" style="text-align: center;">
+  <div id="roulette-cats" style="margin-bottom: 16px;">
+    {
+      categories.map((c, i) => (
+        <button class:list={["cat-btn", { active: i === 0 }]} data-cat={c}>
+          {c}
+        </button>
+      ))
+    }
+  </div>
+  <button class="btn" id="roulette-spin">🎡 돌려밥 돌리기</button>
+  <div id="roulette-result" style="margin-top: 22px; min-height: 90px;">
+    <p style="color: var(--muted);">버튼을 누르면 오늘의 메뉴가 정해집니다</p>
+  </div>
+</div>
+
+<script type="application/json" id="roulette-data" set:html={JSON.stringify(menus)} />
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById("roulette-box");
+    if (!box) return;
+    var menus = JSON.parse(document.getElementById("roulette-data").textContent);
+    var activeCat = "전체";
+    var lastName = "";
+    var resultEl = document.getElementById("roulette-result");
+    var btn = document.getElementById("roulette-spin");
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;",
+        }[c];
+      });
+    }
+
+    box.querySelectorAll("#roulette-cats .cat-btn").forEach(function (b) {
+      b.addEventListener("click", function () {
+        box
+          .querySelectorAll("#roulette-cats .cat-btn")
+          .forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active");
+        activeCat = b.getAttribute("data-cat");
+      });
+    });
+
+    btn.addEventListener("click", function () {
+      var pool = menus.filter(function (m) {
+        return activeCat === "전체" || m.category === activeCat;
+      });
+      if (pool.length > 1 && lastName) {
+        pool = pool.filter(function (m) { return m.name !== lastName; });
+      }
+      var pick = pool[Math.floor(Math.random() * pool.length)];
+      lastName = pick.name;
+      var link = pick.slug
+        ? '<p style="margin-top:10px;"><a href="/recipes/' +
+          esc(pick.slug) +
+          '/" style="color:var(--accent);font-weight:800;">👉 ' +
+          esc(pick.name) +
+          " 레시피 보기</a></p>"
+        : '<p style="margin-top:10px;color:var(--muted);font-size:0.9rem;">레시피 준비 중 — 그래도 오늘은 이거다!</p>';
+      resultEl.innerHTML =
+        '<div style="font-size:2.4rem;">🍽️</div>' +
+        '<div style="font-size:1.5rem;font-weight:900;">' +
+        esc(pick.name) +
+        "</div>" +
+        '<div style="color:var(--muted);font-size:0.9rem;">' +
+        esc(pick.category) +
+        " · " +
+        esc(pick.time) +
+        " · 난이도 " +
+        esc(pick.difficulty) +
+        "</div>" +
+        link;
+    });
+  })();
+</script>

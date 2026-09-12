@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const recipes = await getCollection("recipes");
+  return recipes.map((r) => ({ params: { slug: r.id }, props: { recipe: r } }));
+}
+
+const { recipe } = Astro.props;
+const { Content } = await render(recipe);
+const all = await getCollection("recipes");
+const related = all
+  .filter((r) => r.id !== recipe.id && r.data.category === recipe.data.category)
+  .slice(0, 3);
+const fallback = all.filter((r) => r.id !== recipe.id).slice(0, 3);
+const more = related.length > 0 ? related : fallback;
+---
+
+<BaseLayout title={`${recipe.data.title} | 돌려밥`} description={recipe.data.description}>
+  <p style="color:var(--muted);font-size:0.9rem;">
+    <a href="/recipes/" style="color:var(--muted);">레시피</a> · {recipe.data.category}
+    {recipe.data.time ? ` · ${recipe.data.time}` : ""}
+    {recipe.data.difficulty ? ` · 난이도 ${recipe.data.difficulty}` : ""}
+  </p>
+  <h1 style="font-size:1.7rem;">{recipe.data.title}</h1>
+  <p style="color:var(--muted);">{recipe.data.description}</p>
+  <article class="recipe-body card">
+    <Content />
+  </article>
+  <section class="card">
+    <h2 style="font-size:1.1rem;">같이 보면 좋은 레시피</h2>
+    {
+      more.map((r) => (
+        <p style="margin:8px 0;">
+          <a href={`/recipes/${r.id}/`} style="color:var(--accent);font-weight:700;">
+            {r.data.title}
+          </a>
+        </p>
+      ))
+    }
+    <p style="margin-top:14px;">
+      <a href="/roulette/" style="color:var(--accent);font-weight:800;">🎡 다음 메뉴도 돌려밥에게 맡기기 →</a>
+    </p>
+  </section>
+</BaseLayout>

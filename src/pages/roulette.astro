@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Roulette from "../components/Roulette.astro";
+---
+
+<BaseLayout
+  title="메뉴 돌림판 | 돌려밥"
+  description="카테고리를 고르고 돌리면 오늘의 메뉴가 정해집니다. 한식·중식·일식·양식·분식·다이어트 메뉴 돌림판."
+>
+  <h1 style="font-size:1.6rem;">🎡 메뉴 돌림판</h1>
+  <p style="color:var(--muted);">
+    카테고리를 고르고 버튼을 누르세요. 고민은 돌려밥이 대신합니다.
+  </p>
+  <Roulette />
+  <section class="card">
+    <h2 style="font-size:1.1rem;">돌림판 이용 팁</h2>
+    <ul>
+      <li>마음에 안 들면 한 번 더! 3번까지는 봐드립니다.</li>
+      <li>결과에 레시피 링크가 있으면 바로 조리법으로 이동합니다.</li>
+      <li>친구랑 같이 돌릴 땐 각자 3개씩 뽑아 겹치는 걸로 고르세요.</li>
+    </ul>
+  </section>
+</BaseLayout>

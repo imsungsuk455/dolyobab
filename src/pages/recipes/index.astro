@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const recipes = await getCollection("recipes");
+const byCat: Record<string, typeof recipes> = {};
+for (const r of recipes) {
+  const c = r.data.category;
+  if (!byCat[c]) byCat[c] = [];
+  byCat[c].push(r);
+}
+---
+
+<BaseLayout
+  title="레시피 모음 | 돌려밥"
+  description="직접 해먹어본 초간단 레시피 모음. 재료·과정·실패팁까지 그대로 공개합니다."
+>
+  <h1 style="font-size:1.6rem;">🍳 레시피 모음</h1>
+  <p style="color:var(--muted);">전부 직접 해먹고 사진 찍은 것만 올립니다.</p>
+  {
+    Object.entries(byCat).map(([cat, list]) => (
+      <section class="card">
+        <h2 style="font-size:1.15rem;">{cat}</h2>
+        {list.map((r) => (
+          <p style="margin:10px 0;">
+            <a href={`/recipes/${r.id}/`} style="color:var(--text);font-weight:800;text-decoration:none;">
+              {r.data.title}
+            </a>
+            <br />
+            <span style="color:var(--muted);font-size:0.9rem;">{r.data.description}</span>
+          </p>
+        ))}
+      </section>
+    ))
+  }
+</BaseLayout>
