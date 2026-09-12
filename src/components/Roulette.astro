@@ -4,7 +4,7 @@ import menus from "../data/menus.json";
 const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)))];
 ---
 
-<div class="card" id="roulette-box" style="text-align: center;">
+<div class="card lift reveal" id="roulette-box" style="text-align: center;">
   <div id="roulette-cats" style="margin-bottom: 8px;">
     {
       categories.map((c, i) => (

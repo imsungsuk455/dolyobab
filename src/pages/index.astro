@@ -12,28 +12,39 @@ const picks = recipes.slice(0, 3);
   description="점심·저녁 메뉴 고민 끝. 돌림판을 돌리면 오늘의 메뉴가 정해집니다. 자취생·직장인을 위한 초간단 레시피도 함께 제공합니다."
 >
   <section class="hero">
-    <span class="sticker">🍚 오늘 점심 고민 끝</span>
+    <span class="sticker reveal" style="--index: 0;">🍚 오늘 점심 고민 끝</span>
     <span class="float-emoji" style="left: 2%; top: 8%;">🍜</span>
     <span class="float-emoji" style="right: 3%; top: 22%; animation-delay: 0.7s;">🍕</span>
     <span class="float-emoji" style="left: 6%; bottom: 0; animation-delay: 1.3s;">🍣</span>
     <span class="float-emoji" style="right: 7%; bottom: 6%; animation-delay: 1.9s;">🌮</span>
-    <h1>오늘 뭐 먹지?<br /><span class="marker">10초 만에</span> 정해드림</h1>
-    <p style="color: var(--muted); font-weight: 700;">
+    <p class="reveal" style="--index: 1; margin: 18px 0 0;">
+      <span class="eyebrow">무료 · 회원가입 없음 · 10초 컷</span>
+    </p>
+    <h1 class="reveal" style="--index: 2;">오늘 뭐 먹지?<br /><span class="marker">10초 만에</span> <span class="grad">정해드림</span></h1>
+    <p class="reveal" style="--index: 3; color: var(--muted); font-weight: 700;">
       카테고리 고르고 돌리면 끝. 나머지는 돌려밥에게 맡기세요.
+    </p>
+    <p class="reveal" style="--index: 4; margin-top: 18px;">
+      <a class="cta-pill" href="/roulette/">
+        바로 돌리러 가기
+        <span class="cta-arrow"><iconify-icon icon="solar:arrow-right-bold"></iconify-icon></span>
+      </a>
     </p>
   </section>
 
   <Roulette />
 
-  <section class="card" style="text-align:center;">
+  <section class="card lift reveal" style="text-align:center;">
     <p style="margin:0;">
-      <a href="/pick/" style="color:var(--accent);font-weight:800;">
-        🎯 사다리타기 · 로또뽑기도 해보기 →
+      <a class="cta-pill" href="/pick/">
+        사다리·로또로 고르기
+        <span class="cta-arrow"><iconify-icon icon="solar:arrow-right-bold"></iconify-icon></span>
       </a>
     </p>
   </section>
 
-  <section class="card">
+  <section class="card lift reveal">
+    <p style="margin:0 0 6px;"><span class="eyebrow">직접 해먹은 것만</span></p>
     <h2 class="section-title">🍳 오늘의 추천 레시피</h2>
     {
       picks.map((r) => (
@@ -48,11 +59,17 @@ const picks = recipes.slice(0, 3);
         </p>
       ))
     }
-    <p><a href="/recipes/" style="color:var(--accent);font-weight:800;">레시피 전체 보기 →</a></p>
+    <p style="margin-top:14px;">
+      <a class="cta-pill" href="/recipes/">
+        레시피 전체 보기
+        <span class="cta-arrow"><iconify-icon icon="solar:arrow-right-bold"></iconify-icon></span>
+      </a>
+    </p>
   </section>
 
-  <section class="card">
-    <h2 class="section-title">🍚 돌려밥이란?</h2>
+  <section class="card lift reveal">
+    <p style="margin:0 0 6px;"><span class="eyebrow">돌려밥이란?</span></p>
+    <h2 class="section-title">🍚 메뉴 고민 대신해드립니다</h2>
     <p>
       돌려밥은 점심·저녁 메뉴를 정해주는 무료 서비스입니다. 카테고리를 고르고
       돌림판을 돌리면 메뉴 하나가 추천됩니다. 모든 레시피는 운영자가 직접
