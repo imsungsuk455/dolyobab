@@ -11,9 +11,16 @@ const picks = recipes.slice(0, 3);
   title="돌려밥 | 오늘 뭐 먹지? 10초 만에 메뉴 정하기"
   description="점심·저녁 메뉴 고민 끝. 돌림판을 돌리면 오늘의 메뉴가 정해집니다. 자취생·직장인을 위한 초간단 레시피도 함께 제공합니다."
 >
-  <section style="text-align:center; padding: 12px 0 4px;">
-    <h1 style="font-size: 1.9rem; margin-bottom: 6px;">오늘 뭐 먹지?</h1>
-    <p style="color: var(--muted);">고민은 10초만. 나머지는 돌려밥에게 맡기세요.</p>
+  <section class="hero">
+    <span class="sticker">🍚 오늘 점심 고민 끝</span>
+    <span class="float-emoji" style="left: 2%; top: 8%;">🍜</span>
+    <span class="float-emoji" style="right: 3%; top: 22%; animation-delay: 0.7s;">🍕</span>
+    <span class="float-emoji" style="left: 6%; bottom: 0; animation-delay: 1.3s;">🍣</span>
+    <span class="float-emoji" style="right: 7%; bottom: 6%; animation-delay: 1.9s;">🌮</span>
+    <h1>오늘 뭐 먹지?<br /><span class="marker">10초 만에</span> 정해드림</h1>
+    <p style="color: var(--muted); font-weight: 700;">
+      카테고리 고르고 돌리면 끝. 나머지는 돌려밥에게 맡기세요.
+    </p>
   </section>
 
   <Roulette />
@@ -27,7 +34,7 @@ const picks = recipes.slice(0, 3);
   </section>
 
   <section class="card">
-    <h2 style="font-size:1.2rem;">🍳 오늘의 추천 레시피</h2>
+    <h2 class="section-title">🍳 오늘의 추천 레시피</h2>
     {
       picks.map((r) => (
         <p style="margin:10px 0;">
@@ -45,7 +52,7 @@ const picks = recipes.slice(0, 3);
   </section>
 
   <section class="card">
-    <h2 style="font-size:1.2rem;">돌려밥이란?</h2>
+    <h2 class="section-title">🍚 돌려밥이란?</h2>
     <p>
       돌려밥은 점심·저녁 메뉴를 정해주는 무료 서비스입니다. 카테고리를 고르고
       돌림판을 돌리면 메뉴 하나가 추천됩니다. 모든 레시피는 운영자가 직접

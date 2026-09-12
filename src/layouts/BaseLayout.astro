@@ -26,6 +26,12 @@ const canon = Astro.url.href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
     <meta name="google-adsense-account" content={PUB_ID} />
     <script
       async
@@ -34,12 +40,17 @@ const canon = Astro.url.href;
     ></script>
     <style>
       :root {
-        --accent: #e8590c;
-        --bg: #fff9f2;
-        --text: #343a40;
-        --muted: #868e96;
+        --accent: #ff4d2e;
+        --accent-dark: #c93316;
+        --sun: #ffc53d;
+        --mint: #2fbfa0;
+        --bg: #fff6ec;
+        --text: #3a2e28;
+        --muted: #a08b7a;
         --card: #ffffff;
         --line: #f1e4d4;
+        --ink: #3a2e28;
+        --shadow: #ecd9bd;
       }
       * {
         box-sizing: border-box;
@@ -47,10 +58,13 @@ const canon = Astro.url.href;
       body {
         margin: 0;
         background: var(--bg);
+        background-image: radial-gradient(#f3e2c6 1.4px, transparent 1.4px);
+        background-size: 22px 22px;
         color: var(--text);
-        font-family: -apple-system, "Pretendard", "Apple SD Gothic Neo",
-          "Noto Sans KR", sans-serif;
+        font-family: "Pretendard Variable", Pretendard, -apple-system,
+          "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
         line-height: 1.7;
+        letter-spacing: -0.01em;
       }
       .wrap {
         max-width: 720px;
@@ -59,7 +73,7 @@ const canon = Astro.url.href;
       }
       header.site {
         background: #fff;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 2.5px solid var(--ink);
         position: sticky;
         top: 0;
         z-index: 10;
@@ -68,75 +82,199 @@ const canon = Astro.url.href;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 60px;
+        height: 62px;
       }
       .logo {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         font-weight: 900;
-        color: var(--accent);
+        color: var(--ink);
         text-decoration: none;
+        letter-spacing: -0.02em;
+      }
+      .logo b {
+        background: var(--sun);
+        border-radius: 8px;
+        padding: 0 6px;
       }
       nav.site a {
-        margin-left: 16px;
+        margin-left: 6px;
         color: var(--text);
         text-decoration: none;
-        font-size: 0.95rem;
-        font-weight: 600;
+        font-size: 0.92rem;
+        font-weight: 800;
+        padding: 6px 12px;
+        border-radius: 999px;
       }
       nav.site a:hover {
-        color: var(--accent);
+        background: var(--sun);
+        color: var(--ink);
       }
       main {
-        padding: 32px 0 56px;
+        padding: 28px 0 60px;
       }
       footer.site {
-        border-top: 1px solid var(--line);
-        background: #fff;
-        padding: 28px 0 40px;
+        background: var(--ink);
+        color: #f5e8d8;
+        padding: 30px 0 44px;
         font-size: 0.85rem;
-        color: var(--muted);
       }
       footer.site a {
-        color: var(--muted);
+        color: #f5e8d8;
         text-decoration: none;
         margin-right: 14px;
+        font-weight: 700;
+      }
+      footer.site a:hover {
+        color: var(--sun);
       }
       .card {
         background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 16px;
+        border: 2.5px solid var(--ink);
+        border-radius: 20px;
         padding: 22px;
         margin: 18px 0;
+        box-shadow: 5px 5px 0 var(--shadow);
       }
       .btn {
         display: inline-block;
         background: var(--accent);
         color: #fff;
-        border: none;
-        border-radius: 999px;
-        padding: 14px 36px;
-        font-size: 1.05rem;
-        font-weight: 800;
+        border: 2.5px solid var(--ink);
+        border-radius: 16px;
+        padding: 13px 38px;
+        font-size: 1.08rem;
+        font-weight: 900;
         cursor: pointer;
+        box-shadow: 0 5px 0 var(--ink);
+        transition: transform 0.08s, box-shadow 0.08s;
+        font-family: inherit;
       }
-      .btn:active {
-        transform: scale(0.97);
+      .btn:active:not(:disabled) {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0 var(--ink);
+      }
+      .btn:disabled {
+        cursor: wait;
       }
       .cat-btn {
         background: #fff;
-        border: 1px solid var(--line);
+        border: 2px solid var(--ink);
         border-radius: 999px;
-        padding: 8px 16px;
+        padding: 7px 15px;
         margin: 0 6px 8px 0;
-        font-size: 0.9rem;
-        font-weight: 700;
+        font-size: 0.88rem;
+        font-weight: 800;
         color: var(--text);
         cursor: pointer;
+        box-shadow: 2px 2px 0 var(--shadow);
+        font-family: inherit;
       }
       .cat-btn.active {
-        background: var(--accent);
-        border-color: var(--accent);
+        background: var(--ink);
+        border-color: var(--ink);
         color: #fff;
+        box-shadow: 2px 2px 0 rgba(58, 46, 40, 0.25);
+      }
+      /* 히어로 */
+      .hero {
+        text-align: center;
+        padding: 26px 0 6px;
+        position: relative;
+      }
+      .hero h1 {
+        font-size: 2.15rem;
+        line-height: 1.25;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin: 14px 0 8px;
+      }
+      .marker {
+        background: linear-gradient(transparent 52%, var(--sun) 52% 94%, transparent 94%);
+        padding: 0 4px;
+      }
+      .sticker {
+        display: inline-block;
+        background: #fff;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        padding: 6px 16px;
+        font-weight: 900;
+        font-size: 0.9rem;
+        box-shadow: 3px 3px 0 var(--ink);
+        animation: floaty 2.6s ease-in-out infinite;
+      }
+      .hero .float-emoji {
+        position: absolute;
+        font-size: 1.9rem;
+        animation: floaty 3.2s ease-in-out infinite;
+        user-select: none;
+      }
+      @keyframes floaty {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-4deg);
+        }
+        50% {
+          transform: translateY(-9px) rotate(4deg);
+        }
+      }
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      /* 영수증 결과지 */
+      .receipt {
+        background: #fff;
+        border: 2.5px solid var(--ink);
+        border-radius: 18px;
+        padding: 20px 18px 16px;
+        box-shadow: 5px 5px 0 var(--ink);
+        max-width: 340px;
+        margin: 4px auto 0;
+      }
+      .receipt .stamp {
+        display: inline-block;
+        background: var(--sun);
+        border: 2px solid var(--ink);
+        border-radius: 10px;
+        padding: 1px 12px;
+        font-weight: 900;
+        font-size: 0.8rem;
+        transform: rotate(-3deg);
+        letter-spacing: 0.08em;
+      }
+      .receipt-name {
+        font-size: 1.55rem;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        margin: 10px 0 2px;
+      }
+      .receipt-meta {
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      .receipt-dash {
+        border-top: 2px dashed #d8c3a5;
+        margin: 12px 0;
+      }
+      .receipt-link {
+        display: inline-block;
+        background: var(--ink);
+        color: #fff !important;
+        font-weight: 900;
+        border-radius: 12px;
+        padding: 9px 22px;
+        text-decoration: none;
+        margin-top: 2px;
+      }
+      .receipt-foot {
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 700;
       }
       article.recipe-body img {
         max-width: 100%;
@@ -154,7 +292,7 @@ const canon = Astro.url.href;
   <body>
     <header class="site">
       <div class="wrap">
-        <a class="logo" href="/">🍚 돌려밥</a>
+        <a class="logo" href="/">🍚 <b>돌려밥</b></a>
         <nav class="site">
           <a href="/">홈</a>
           <a href="/roulette/">돌림판</a>

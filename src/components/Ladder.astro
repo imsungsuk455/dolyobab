@@ -207,28 +207,29 @@ import menus from "../data/menus.json";
           var item = candidates[t.exit];
           var exitEl = document.getElementById("ladder-exit-" + t.exit);
           if (exitEl) {
-            exitEl.setAttribute("fill", "#e8590c");
+            exitEl.setAttribute("fill", "#FF4D2E");
             exitEl.setAttribute("font-size", "14");
           }
-          var link = item.slug
-            ? '<p style="margin-top:8px;"><a href="/recipes/' +
-              esc(item.slug) +
-              '/" style="color:var(--accent);font-weight:800;">👉 ' +
-              esc(item.name) +
-              " 레시피 보기</a></p>"
-            : "";
+          var link2 = item.slug
+            ? '<a class="receipt-link" href="/recipes/' + esc(item.slug) + '/">👉 레시피 보기</a>'
+            : '<div style="color:var(--muted);font-size:0.9rem;font-weight:700;">레시피 준비 중</div>';
           resultEl.innerHTML =
-            '<div style="font-size:1.4rem;font-weight:900;">🍽️ ' +
+            '<div class="receipt">' +
+            '<span class="stamp">사다리 도착!</span>' +
+            '<div class="receipt-name">🪜 ' +
             esc(item.name) +
             "</div>" +
-            '<div style="color:var(--muted);font-size:0.9rem;">' +
+            '<div class="receipt-meta">' +
             (idx + 1) +
-            "번 사다리 도착 · " +
+            "번 사다리 · " +
             esc(item.category) +
             " · " +
             esc(item.time) +
             "</div>" +
-            link;
+            '<div class="receipt-dash"></div>' +
+            link2 +
+            '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
+            "</div>";
           running = false;
         }
       }

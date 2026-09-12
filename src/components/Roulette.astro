@@ -18,7 +18,7 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
   <div id="wheel-wrap" style="position: relative; width: 100%; max-width: 340px; margin: 8px auto 0;">
     <div
       id="wheel-pointer"
-      style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 22px solid #343a40; z-index: 2;"
+      style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 22px solid #3A2E28; z-index: 2;"
     ></div>
     <canvas
       id="dolly-wheel"
@@ -45,7 +45,7 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
     if (!box) return;
 
     var MENUS = JSON.parse(document.getElementById("roulette-data").textContent);
-    var COLORS = ["#FF6B6B", "#FFA94D", "#FFD43B", "#69DB7C", "#4DABF7", "#9775FA", "#F783AC", "#63E6BE"];
+    var COLORS = ["#FF4D2E", "#FF9F1C", "#FFC53D", "#2FBFA0", "#4D96FF", "#9B5DE5", "#F15BB5", "#00B8C4"];
     var WHEEL_SIZE = 8;
 
     var activeCat = "전체";
@@ -131,34 +131,45 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       // 중앙 허브
       ctx.beginPath();
       ctx.arc(cx, cy, 44, 0, Math.PI * 2);
-      ctx.fillStyle = "#343a40";
+      ctx.fillStyle = "#3A2E28";
       ctx.fill();
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = "#FFC53D";
       ctx.font = "900 17px -apple-system, 'Pretendard', sans-serif";
       ctx.textAlign = "center";
       ctx.fillText("돌려밥", cx, cy + 6);
     }
 
+    function receiptHTML(icon, name, meta, slug) {
+      var action = slug
+        ? '<a class="receipt-link" href="/recipes/' +
+          esc(slug) +
+          '/">👉 레시피 보기</a>'
+        : '<div style="color:var(--muted);font-size:0.9rem;font-weight:700;">레시피 준비 중 — 그래도 오늘은 이거다!</div>';
+      return (
+        '<div class="receipt">' +
+        '<span class="stamp">돌려밥 주문서</span>' +
+        '<div class="receipt-name">' +
+        icon +
+        " " +
+        esc(name) +
+        "</div>" +
+        '<div class="receipt-meta">' +
+        meta +
+        "</div>" +
+        '<div class="receipt-dash"></div>' +
+        action +
+        '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
+        "</div>"
+      );
+    }
+
     function showResult(item) {
-      var link = item.slug
-        ? '<p style="margin-top:10px;"><a href="/recipes/' +
-          esc(item.slug) +
-          '/" style="color:var(--accent);font-weight:800;">👉 ' +
-          esc(item.name) +
-          " 레시피 보기</a></p>"
-        : '<p style="margin-top:10px;color:var(--muted);font-size:0.9rem;">레시피 준비 중 — 그래도 오늘은 이거다!</p>';
-      resultEl.innerHTML =
-        '<div style="font-size:1.5rem;font-weight:900;">🍽️ ' +
-        esc(item.name) +
-        "</div>" +
-        '<div style="color:var(--muted);font-size:0.9rem;">' +
-        esc(item.category) +
-        " · " +
-        esc(item.time) +
-        " · 난이도 " +
-        esc(item.difficulty) +
-        "</div>" +
-        link;
+      resultEl.innerHTML = receiptHTML(
+        "🍽️",
+        item.name,
+        esc(item.category) + " · " + esc(item.time) + " · 난이도 " + esc(item.difficulty),
+        item.slug
+      );
     }
 
     function confetti() {
