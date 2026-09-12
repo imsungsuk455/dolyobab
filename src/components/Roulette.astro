@@ -5,7 +5,7 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
 ---
 
 <div class="card" id="roulette-box" style="text-align: center;">
-  <div id="roulette-cats" style="margin-bottom: 16px;">
+  <div id="roulette-cats" style="margin-bottom: 8px;">
     {
       categories.map((c, i) => (
         <button class:list={["cat-btn", { active: i === 0 }]} data-cat={c}>
@@ -14,9 +14,26 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       ))
     }
   </div>
-  <button class="btn" id="roulette-spin">🎡 돌려밥 돌리기</button>
-  <div id="roulette-result" style="margin-top: 22px; min-height: 90px;">
-    <p style="color: var(--muted);">버튼을 누르면 오늘의 메뉴가 정해집니다</p>
+
+  <div id="wheel-wrap" style="position: relative; width: 100%; max-width: 340px; margin: 8px auto 0;">
+    <div
+      id="wheel-pointer"
+      style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-top: 22px solid #343a40; z-index: 2;"
+    ></div>
+    <canvas
+      id="dolly-wheel"
+      width="340"
+      height="340"
+      style="width: 100%; max-width: 340px; height: auto; cursor: pointer; filter: drop-shadow(0 10px 22px rgba(232,89,12,.25));"
+    ></canvas>
+  </div>
+
+  <div style="margin-top: 14px;">
+    <button class="btn" id="roulette-spin">🎡 돌리기</button>
+  </div>
+
+  <div id="roulette-result" style="margin-top: 18px; min-height: 90px;">
+    <p style="color: var(--muted);">원판을 눌러도 돌아갑니다</p>
   </div>
 </div>
 
@@ -26,63 +43,225 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
   (function () {
     var box = document.getElementById("roulette-box");
     if (!box) return;
-    var menus = JSON.parse(document.getElementById("roulette-data").textContent);
+
+    var MENUS = JSON.parse(document.getElementById("roulette-data").textContent);
+    var COLORS = ["#FF6B6B", "#FFA94D", "#FFD43B", "#69DB7C", "#4DABF7", "#9775FA", "#F783AC", "#63E6BE"];
+    var WHEEL_SIZE = 8;
+
     var activeCat = "전체";
-    var lastName = "";
+    var wheelItems = [];
+    var rotation = 0;
+    var spinning = false;
+
+    var canvas = document.getElementById("dolly-wheel");
+    var ctx = canvas.getContext("2d");
     var resultEl = document.getElementById("roulette-result");
-    var btn = document.getElementById("roulette-spin");
+    var spinBtn = document.getElementById("roulette-spin");
+
+    // 선명한 원판을 위해 DPR 대응
+    var dpr = window.devicePixelRatio || 1;
+    var SIZE = 340;
+    canvas.width = SIZE * dpr;
+    canvas.height = SIZE * dpr;
+    ctx.scale(dpr, dpr);
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, function (c) {
-        return {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;",
-        }[c];
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
       });
+    }
+
+    function pool() {
+      return MENUS.filter(function (m) {
+        return activeCat === "전체" || m.category === activeCat;
+      });
+    }
+
+    // 원판에 올릴 최대 8개 후보 선정
+    function buildWheel() {
+      var p = pool().slice();
+      for (var i = p.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = p[i];
+        p[i] = p[j];
+        p[j] = t;
+      }
+      wheelItems = p.slice(0, WHEEL_SIZE);
+      rotation = 0;
+      drawWheel();
+    }
+
+    function drawWheel() {
+      var cx = SIZE / 2;
+      var cy = SIZE / 2;
+      var r = SIZE / 2 - 4;
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      var n = wheelItems.length;
+      if (n === 0) return;
+      var seg = (Math.PI * 2) / n;
+
+      for (var i = 0; i < n; i++) {
+        var a0 = rotation + i * seg;
+        var a1 = a0 + seg;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, a0, a1);
+        ctx.closePath();
+        ctx.fillStyle = COLORS[i % COLORS.length];
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // 라벨
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(a0 + seg / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "800 14px -apple-system, 'Pretendard', sans-serif";
+        ctx.shadowColor = "rgba(0,0,0,.25)";
+        ctx.shadowBlur = 3;
+        var label = wheelItems[i].name;
+        if (label.length > 7) label = label.slice(0, 7) + "…";
+        ctx.fillText(label, r - 14, 5);
+        ctx.restore();
+      }
+
+      // 중앙 허브
+      ctx.beginPath();
+      ctx.arc(cx, cy, 44, 0, Math.PI * 2);
+      ctx.fillStyle = "#343a40";
+      ctx.fill();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 17px -apple-system, 'Pretendard', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("돌려밥", cx, cy + 6);
+    }
+
+    function showResult(item) {
+      var link = item.slug
+        ? '<p style="margin-top:10px;"><a href="/recipes/' +
+          esc(item.slug) +
+          '/" style="color:var(--accent);font-weight:800;">👉 ' +
+          esc(item.name) +
+          " 레시피 보기</a></p>"
+        : '<p style="margin-top:10px;color:var(--muted);font-size:0.9rem;">레시피 준비 중 — 그래도 오늘은 이거다!</p>';
+      resultEl.innerHTML =
+        '<div style="font-size:1.5rem;font-weight:900;">🍽️ ' +
+        esc(item.name) +
+        "</div>" +
+        '<div style="color:var(--muted);font-size:0.9rem;">' +
+        esc(item.category) +
+        " · " +
+        esc(item.time) +
+        " · 난이도 " +
+        esc(item.difficulty) +
+        "</div>" +
+        link;
+    }
+
+    function confetti() {
+      var c = document.createElement("canvas");
+      c.style.cssText =
+        "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;";
+      document.body.appendChild(c);
+      var x = c.getContext("2d");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      var parts = [];
+      for (var i = 0; i < 90; i++) {
+        parts.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+          y: window.innerHeight / 2,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 12 - 3,
+          s: Math.random() * 7 + 3,
+          col: COLORS[i % COLORS.length],
+          rot: Math.random() * Math.PI,
+        });
+      }
+      var frames = 0;
+      (function tick() {
+        x.clearRect(0, 0, c.width, c.height);
+        parts.forEach(function (p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.45;
+          p.rot += 0.15;
+          x.save();
+          x.translate(p.x, p.y);
+          x.rotate(p.rot);
+          x.fillStyle = p.col;
+          x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          x.restore();
+        });
+        if (++frames < 90) requestAnimationFrame(tick);
+        else c.remove();
+      })();
+    }
+
+    function spin() {
+      if (spinning) return;
+      if (wheelItems.length === 0) return;
+      if (wheelItems.length === 1) {
+        showResult(wheelItems[0]);
+        confetti();
+        return;
+      }
+      spinning = true;
+      spinBtn.disabled = true;
+      spinBtn.style.opacity = "0.6";
+
+      var n = wheelItems.length;
+      var seg = (Math.PI * 2) / n;
+      var winner = Math.floor(Math.random() * n);
+      // 포인터(위쪽, -90°)에 당첨 칸 중심이 오도록 목표 회전각 계산
+      var target = -Math.PI / 2 - (winner + 0.5) * seg;
+      var turns = Math.PI * 2 * (5 + Math.floor(Math.random() * 3));
+      var start = rotation;
+      // 현재 각도에서 앞으로만 돌도록 보정
+      var delta = ((target - start) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) + turns;
+
+      var dur = 4200;
+      var t0 = null;
+      function frame(t) {
+        if (!t0) t0 = t;
+        var p = Math.min((t - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 4);
+        rotation = start + delta * eased;
+        drawWheel();
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          rotation = start + delta;
+          drawWheel();
+          spinning = false;
+          spinBtn.disabled = false;
+          spinBtn.style.opacity = "1";
+          showResult(wheelItems[winner]);
+          confetti();
+        }
+      }
+      requestAnimationFrame(frame);
     }
 
     box.querySelectorAll("#roulette-cats .cat-btn").forEach(function (b) {
       b.addEventListener("click", function () {
+        if (spinning) return;
         box
           .querySelectorAll("#roulette-cats .cat-btn")
           .forEach(function (x) { x.classList.remove("active"); });
         b.classList.add("active");
         activeCat = b.getAttribute("data-cat");
+        resultEl.innerHTML =
+          '<p style="color: var(--muted);">후보가 바뀌었습니다. 돌려보세요!</p>';
+        buildWheel();
       });
     });
 
-    btn.addEventListener("click", function () {
-      var pool = menus.filter(function (m) {
-        return activeCat === "전체" || m.category === activeCat;
-      });
-      if (pool.length > 1 && lastName) {
-        pool = pool.filter(function (m) { return m.name !== lastName; });
-      }
-      var pick = pool[Math.floor(Math.random() * pool.length)];
-      lastName = pick.name;
-      var link = pick.slug
-        ? '<p style="margin-top:10px;"><a href="/recipes/' +
-          esc(pick.slug) +
-          '/" style="color:var(--accent);font-weight:800;">👉 ' +
-          esc(pick.name) +
-          " 레시피 보기</a></p>"
-        : '<p style="margin-top:10px;color:var(--muted);font-size:0.9rem;">레시피 준비 중 — 그래도 오늘은 이거다!</p>';
-      resultEl.innerHTML =
-        '<div style="font-size:2.4rem;">🍽️</div>' +
-        '<div style="font-size:1.5rem;font-weight:900;">' +
-        esc(pick.name) +
-        "</div>" +
-        '<div style="color:var(--muted);font-size:0.9rem;">' +
-        esc(pick.category) +
-        " · " +
-        esc(pick.time) +
-        " · 난이도 " +
-        esc(pick.difficulty) +
-        "</div>" +
-        link;
-    });
+    spinBtn.addEventListener("click", spin);
+    canvas.addEventListener("click", spin);
+    buildWheel();
   })();
 </script>
