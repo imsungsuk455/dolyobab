@@ -1,0 +1,244 @@
+---
+import menus from "../data/menus.json";
+---
+
+<div class="card" id="ladder-box" style="text-align: center;">
+  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
+    출발 번호를 고르면 사다리를 타고 메뉴가 정해집니다
+  </p>
+  <svg
+    id="ladder-svg"
+    viewBox="0 0 320 300"
+    style="width: 100%; max-width: 320px; height: auto; touch-action: manipulation;"
+  ></svg>
+  <div style="margin-top: 10px;">
+    <button class="cat-btn" id="ladder-reshuffle">🔀 후보 다시 섞기</button>
+  </div>
+  <div id="ladder-result" style="margin-top: 14px; min-height: 80px;">
+    <p style="color: var(--muted);">번호를 눌러 출발하세요</p>
+  </div>
+</div>
+
+<script type="application/json" id="ladder-data" set:html={JSON.stringify(menus)} />
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById("ladder-box");
+    if (!box) return;
+    var MENUS = JSON.parse(document.getElementById("ladder-data").textContent);
+
+    var N = 4;
+    var TOP = 34;
+    var BOTTOM = 256;
+    var W = 320;
+    var NS = "http://www.w3.org/2000/svg";
+
+    var svg = document.getElementById("ladder-svg");
+    var resultEl = document.getElementById("ladder-result");
+    var candidates = [];
+    var rungs = [];
+    var running = false;
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function xs(i) {
+      return 40 + i * 80;
+    }
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    function shortName(s) {
+      return s.length > 6 ? s.slice(0, 6) + "…" : s;
+    }
+
+    function el(name, attrs) {
+      var e = document.createElementNS(NS, name);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      return e;
+    }
+
+    function build() {
+      running = false;
+      candidates = shuffle(MENUS.slice()).slice(0, N);
+      rungs = [];
+      // 인접한 기둥 사이마다 가로대 3~4개, 세로 간격 확보
+      for (var g = 0; g < N - 1; g++) {
+        var count = 3 + Math.floor(Math.random() * 2);
+        var ys = [];
+        var tries = 0;
+        while (ys.length < count && tries < 60) {
+          tries++;
+          var y = TOP + 24 + Math.random() * (BOTTOM - TOP - 48);
+          var ok = true;
+          for (var k = 0; k < ys.length; k++) {
+            if (Math.abs(ys[k] - y) < 34) { ok = false; break; }
+          }
+          if (ok) ys.push(y);
+        }
+        ys.forEach(function (y) { rungs.push({ gap: g, y: y }); });
+      }
+      resultEl.innerHTML = '<p style="color: var(--muted);">번호를 눌러 출발하세요</p>';
+      draw(null);
+    }
+
+    function draw(progress) {
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      // 세로 기둥
+      for (var i = 0; i < N; i++) {
+        svg.appendChild(
+          el("line", { x1: xs(i), y1: TOP, x2: xs(i), y2: BOTTOM, stroke: "#dee2e6", "stroke-width": 4, "stroke-linecap": "round" })
+        );
+      }
+      // 가로대
+      rungs.forEach(function (r) {
+        svg.appendChild(
+          el("line", { x1: xs(r.gap), y1: r.y, x2: xs(r.gap + 1), y2: r.y, stroke: "#adb5bd", "stroke-width": 4, "stroke-linecap": "round" })
+        );
+      });
+      // 출발 번호 (클릭 영역)
+      for (var s = 0; s < N; s++) {
+        (function (idx) {
+          var c = el("circle", { cx: xs(idx), cy: 14, r: 13, fill: "#e8590c", style: "cursor:pointer;" });
+          c.addEventListener("click", function () { start(idx); });
+          svg.appendChild(c);
+          var t = el("text", { x: xs(idx), y: 19, "text-anchor": "middle", fill: "#fff", "font-size": 13, "font-weight": 800 });
+          t.textContent = idx + 1;
+          t.style.pointerEvents = "none";
+          svg.appendChild(t);
+        })(s);
+      }
+      // 도착 칸 (물음표)
+      for (var e = 0; e < N; e++) {
+        var ec = el("circle", { cx: xs(e), cy: BOTTOM + 22, r: 15, fill: "#fff3e6", stroke: "#e8590c", "stroke-width": 2 });
+        svg.appendChild(ec);
+        var et = el("text", { x: xs(e), y: BOTTOM + 27, "text-anchor": "middle", fill: "#e8590c", "font-size": 14, "font-weight": 900, id: "ladder-exit-" + e });
+        et.textContent = "?";
+        svg.appendChild(et);
+      }
+      // 이동 경로 하이라이트
+      if (progress && progress.length > 1) {
+        var pl = el("polyline", {
+          points: progress.map(function (p) { return p[0] + "," + p[1]; }).join(" "),
+          fill: "none",
+          stroke: "#e8590c",
+          "stroke-width": 5,
+          "stroke-linecap": "round",
+          "stroke-linejoin": "round",
+        });
+        svg.appendChild(pl);
+        var dot = el("circle", { cx: progress[progress.length - 1][0], cy: progress[progress.length - 1][1], r: 8, fill: "#343a40" });
+        svg.appendChild(dot);
+      }
+    }
+
+    // 출발 기둥에서 사다리를 타고 내려가는 전체 경로 계산
+    function trace(start) {
+      var pts = [[xs(start), TOP]];
+      var line = start;
+      var y = TOP;
+      for (;;) {
+        var next = null;
+        for (var i = 0; i < rungs.length; i++) {
+          var r = rungs[i];
+          if (r.y <= y + 1) continue;
+          if (r.gap === line - 1 || r.gap === line) {
+            if (!next || r.y < next.y) next = r;
+          }
+        }
+        if (!next) break;
+        pts.push([xs(line), next.y]);
+        line = next.gap === line ? line + 1 : line - 1;
+        pts.push([xs(line), next.y]);
+        y = next.y;
+      }
+      pts.push([xs(line), BOTTOM]);
+      return { points: pts, exit: line };
+    }
+
+    function start(idx) {
+      if (running) return;
+      running = true;
+      var t = trace(idx);
+      var pts = t.points;
+      // 전체 길이를 재서 일정 속도로 이동
+      var total = 0;
+      var segLens = [0];
+      for (var i = 1; i < pts.length; i++) {
+        var dx = pts[i][0] - pts[i - 1][0];
+        var dy = pts[i][1] - pts[i - 1][1];
+        total += Math.sqrt(dx * dx + dy * dy);
+        segLens.push(total);
+      }
+      var dur = 2200;
+      var t0 = null;
+      function frame(now) {
+        if (!t0) t0 = now;
+        var p = Math.min((now - t0) / dur, 1);
+        var dist = total * p;
+        var shown = [pts[0]];
+        for (var s = 1; s < pts.length; s++) {
+          if (segLens[s] <= dist) {
+            shown.push(pts[s]);
+          } else {
+            var remain = dist - segLens[s - 1];
+            var len = segLens[s] - segLens[s - 1] || 1;
+            var f = remain / len;
+            shown.push([
+              pts[s - 1][0] + (pts[s][0] - pts[s - 1][0]) * f,
+              pts[s - 1][1] + (pts[s][1] - pts[s - 1][1]) * f,
+            ]);
+            break;
+          }
+        }
+        draw(shown);
+        if (p < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          var item = candidates[t.exit];
+          var exitEl = document.getElementById("ladder-exit-" + t.exit);
+          if (exitEl) exitEl.textContent = shortName(item.name);
+          var link = item.slug
+            ? '<p style="margin-top:8px;"><a href="/recipes/' +
+              esc(item.slug) +
+              '/" style="color:var(--accent);font-weight:800;">👉 ' +
+              esc(item.name) +
+              " 레시피 보기</a></p>"
+            : "";
+          resultEl.innerHTML =
+            '<div style="font-size:1.4rem;font-weight:900;">🍽️ ' +
+            esc(item.name) +
+            "</div>" +
+            '<div style="color:var(--muted);font-size:0.9rem;">' +
+            (idx + 1) +
+            "번 사다리 도착 · " +
+            esc(item.category) +
+            " · " +
+            esc(item.time) +
+            "</div>" +
+            link;
+          running = false;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById("ladder-reshuffle").addEventListener("click", function () {
+      if (running) return;
+      build();
+    });
+
+    build();
+  })();
+</script>
