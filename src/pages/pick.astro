@@ -1,28 +1,31 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Ladder from "../components/Ladder.astro";
-import Lottery from "../components/Lottery.astro";
+import Dice from "../components/Dice.astro";
 ---
 
 <BaseLayout
   title="뽑기 3종 | 돌려밥"
-  description="원판 룰렛에 이어 사다리타기와 로또뽑기로 메뉴를 정해보세요. 고르는 재미가 3배!"
+  description="원판 룰렛에 이어 사다리타기와 주사위 굴리기로 메뉴를 정해보세요. 고르는 재미가 3배!"
 >
   <h1 style="font-size:1.6rem;">🎮 뽑기 3종</h1>
   <p style="color:var(--muted);">
-    원판은 질렸나요? 사다리타기와 로또뽑기로도 정할 수 있습니다.
+    원판은 질렸나요? 사다리타기와 주사위 굴리기로도 정할 수 있습니다.
   </p>
 
   <h2 style="font-size:1.25rem; margin-top: 8px;">1. 사다리타기</h2>
   <Ladder />
 
-  <h2 style="font-size:1.25rem; margin-top: 8px;">2. 로또뽑기</h2>
-  <Lottery />
+  <h2 style="font-size:1.25rem; margin-top: 8px;">2. 주사위 굴리기</h2>
+  <Dice />
 
-  <section class="card">
+  <section class="card lift reveal">
     <h2 style="font-size:1.1rem;">3. 원판 룰렛</h2>
     <p>
-      <a href="/roulette/" style="color:var(--accent);font-weight:800;">🎡 원판 룰렛 돌리러 가기 →</a>
+      <a class="cta-pill" href="/roulette/">
+        원판 룰렛 돌리러 가기
+        <span class="cta-arrow"><iconify-icon icon="solar:arrow-right-bold"></iconify-icon></span>
+      </a>
     </p>
   </section>
 </BaseLayout>

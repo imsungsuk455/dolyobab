@@ -1,0 +1,265 @@
+---
+import menus from "../data/menus.json";
+---
+
+<div class="card lift reveal" id="dice-box" style="text-align: center;">
+  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
+    후보 6개에 번호를 매겼습니다. 주사위를 굴리세요!
+  </p>
+
+  <div class="dice-scene">
+    <div class="dice-cube" id="dice-cube">
+      <div class="dice-face f1" data-n="1"></div>
+      <div class="dice-face f2" data-n="2"></div>
+      <div class="dice-face f3" data-n="3"></div>
+      <div class="dice-face f4" data-n="4"></div>
+      <div class="dice-face f5" data-n="5"></div>
+      <div class="dice-face f6" data-n="6"></div>
+    </div>
+  </div>
+
+  <div id="dice-cands" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0;text-align:left;"></div>
+
+  <div>
+    <button class="btn" id="dice-roll">🎲 주사위 굴리기</button>
+  </div>
+  <div style="margin-top: 10px;">
+    <button class="cat-btn" id="dice-reshuffle">🔀 후보 다시 섞기</button>
+  </div>
+  <div id="dice-result" style="margin-top: 14px; min-height: 80px;">
+    <p style="color: var(--muted);">버튼을 누르면 주사위가 구릅니다</p>
+  </div>
+</div>
+
+<style is:global>
+  .dice-scene {
+    width: 150px;
+    height: 150px;
+    perspective: 650px;
+    margin: 6px auto;
+  }
+  .dice-cube {
+    width: 120px;
+    height: 120px;
+    margin: 15px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 2.2s cubic-bezier(0.15, 0.85, 0.25, 1);
+  }
+  .dice-face {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: #fff;
+    border: 2.5px solid var(--ink);
+    border-radius: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 20px;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9);
+  }
+  .dice-face .pip {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent);
+    place-self: center;
+  }
+  .dice-face .pip.blank {
+    background: transparent;
+  }
+  .f1 { transform: translateZ(60px); }
+  .f6 { transform: rotateY(180deg) translateZ(60px); }
+  .f3 { transform: rotateY(90deg) translateZ(60px); }
+  .f4 { transform: rotateY(-90deg) translateZ(60px); }
+  .f2 { transform: rotateX(90deg) translateZ(60px); }
+  .f5 { transform: rotateX(-90deg) translateZ(60px); }
+  .dice-cand-win {
+    border-color: var(--accent) !important;
+    background: #fff7ed !important;
+    font-weight: 900;
+  }
+</style>
+
+<script type="application/json" id="dice-data" set:html={JSON.stringify(menus)} />
+
+<script is:inline>
+  (function () {
+    var box = document.getElementById("dice-box");
+    if (!box) return;
+    var MENUS = JSON.parse(document.getElementById("dice-data").textContent);
+    var BALL_COLORS = ["#f59f00", "#4dabf7", "#ff6b6b", "#9775fa", "#63e6be", "#e8590c"];
+    // 표준 주사위 배치(마주 보는 면의 합이 7). 각 눈을 정면으로 가져오는 큐브 회전값
+    var FACE_ROT = {
+      1: [0, 0],
+      6: [0, 180],
+      3: [0, -90],
+      4: [0, 90],
+      2: [-90, 0],
+      5: [90, 0],
+    };
+    var PIPS = {
+      1: [5],
+      2: [3, 7],
+      3: [3, 5, 7],
+      4: [1, 3, 7, 9],
+      5: [1, 3, 5, 7, 9],
+      6: [1, 3, 4, 6, 7, 9],
+    };
+
+    var cube = document.getElementById("dice-cube");
+    var candsEl = document.getElementById("dice-cands");
+    var resultEl = document.getElementById("dice-result");
+    var rollBtn = document.getElementById("dice-roll");
+    var balls = [];
+    var rolling = false;
+
+    function esc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+      });
+    }
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    }
+
+    // 주사위 눈 dots 그리기
+    box.querySelectorAll(".dice-face").forEach(function (f) {
+      var n = parseInt(f.getAttribute("data-n"), 10);
+      var on = PIPS[n];
+      for (var cell = 1; cell <= 9; cell++) {
+        var d = document.createElement("div");
+        d.className = "pip" + (on.indexOf(cell) === -1 ? " blank" : "");
+        d.style.gridArea = Math.ceil(cell / 3) + " / " + (((cell - 1) % 3) + 1);
+        f.appendChild(d);
+      }
+    });
+
+    function setup() {
+      balls = shuffle(MENUS.slice()).slice(0, 6);
+      candsEl.innerHTML = "";
+      balls.forEach(function (m, i) {
+        var row = document.createElement("div");
+        row.className = "dice-cand";
+        row.style.cssText =
+          "font-size:.85rem;background:#fff;border:2px solid var(--line);border-radius:10px;padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .4s cubic-bezier(.16,1,.3,1);";
+        row.innerHTML =
+          '<span style="display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;color:#fff;font-weight:900;font-size:.8rem;background:' +
+          BALL_COLORS[i % BALL_COLORS.length] +
+          ';">' +
+          (i + 1) +
+          "</span> " +
+          esc(m.name);
+        candsEl.appendChild(row);
+      });
+      resultEl.innerHTML = '<p style="color: var(--muted);">버튼을 누르면 주사위가 구릅니다</p>';
+    }
+
+    function confetti() {
+      var c = document.createElement("canvas");
+      c.style.cssText =
+        "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;";
+      document.body.appendChild(c);
+      var x = c.getContext("2d");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      var parts = [];
+      for (var i = 0; i < 80; i++) {
+        parts.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 220,
+          y: window.innerHeight / 3,
+          vx: (Math.random() - 0.5) * 13,
+          vy: -Math.random() * 11 - 2,
+          s: Math.random() * 7 + 3,
+          col: BALL_COLORS[i % BALL_COLORS.length],
+          rot: Math.random() * Math.PI,
+        });
+      }
+      var frames = 0;
+      (function tick() {
+        x.clearRect(0, 0, c.width, c.height);
+        parts.forEach(function (p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.45;
+          p.rot += 0.15;
+          x.save();
+          x.translate(p.x, p.y);
+          x.rotate(p.rot);
+          x.fillStyle = p.col;
+          x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          x.restore();
+        });
+        if (++frames < 85) requestAnimationFrame(tick);
+        else c.remove();
+      })();
+    }
+
+    function roll() {
+      if (rolling) return;
+      rolling = true;
+      rollBtn.disabled = true;
+      rollBtn.style.opacity = "0.6";
+      candsEl.querySelectorAll(".dice-cand").forEach(function (r) {
+        r.classList.remove("dice-cand-win");
+      });
+      resultEl.innerHTML = '<p style="color:var(--muted);font-weight:800;">데구르르… 🌀</p>';
+
+      var num = 1 + Math.floor(Math.random() * 6);
+      var base = FACE_ROT[num];
+      var rx = base[0] - 720;
+      var ry = base[1] + 1080;
+      // 트랜지션 리트리거 보장
+      void cube.offsetWidth;
+      cube.style.transform = "rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
+
+      setTimeout(function () {
+        var item = balls[num - 1];
+        var rows = candsEl.querySelectorAll(".dice-cand");
+        if (rows[num - 1]) rows[num - 1].classList.add("dice-cand-win");
+        var link = item.slug
+          ? '<a class="receipt-link" href="/recipes/' +
+            esc(item.slug) +
+            '/">👉 레시피 보기</a>'
+          : '<div style="color:var(--muted);font-size:0.9rem;font-weight:700;">레시피 준비 중</div>';
+        resultEl.innerHTML =
+          '<div class="receipt">' +
+          '<span class="stamp">' +
+          num +
+          " 나옴!</span>" +
+          '<div class="receipt-name">🎲 ' +
+          esc(item.name) +
+          "</div>" +
+          '<div class="receipt-meta">' +
+          esc(item.category) +
+          " · " +
+          esc(item.time) +
+          "</div>" +
+          '<div class="receipt-dash"></div>' +
+          link +
+          '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
+          "</div>";
+        confetti();
+        rolling = false;
+        rollBtn.disabled = false;
+        rollBtn.style.opacity = "1";
+      }, 2300);
+    }
+
+    rollBtn.addEventListener("click", roll);
+    document.getElementById("dice-reshuffle").addEventListener("click", function () {
+      if (rolling) return;
+      setup();
+    });
+
+    setup();
+  })();
+</script>
