@@ -6,10 +6,12 @@ import menus from "../data/menus.json";
   <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
     공 6개 중 행운의 한 개가 뽑힙니다
   </p>
+  <div style="background:linear-gradient(180deg,#343a40 0%,#495057 100%);color:#fff;font-weight:900;border-radius:14px 14px 0 0;padding:8px;letter-spacing:3px;font-size:.85rem;">🎰 DOLYOBAB LOTTO</div>
   <div
     id="lotto-machine"
-    style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 18px 0; min-height: 76px;"
+    style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;padding:22px 12px;background:linear-gradient(180deg,#d0ebff 0%,#f8f9fa 100%);border:3px solid #343a40;border-top:none;border-radius:0 0 20px 20px;box-shadow:inset 0 8px 20px rgba(0,0,0,.14);margin:0;min-height:104px;"
   ></div>
+  <div id="lotto-cands" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0;text-align:left;"></div>
   <div>
     <button class="btn" id="lotto-draw">🎰 로또 뽑기</button>
   </div>
@@ -23,13 +25,13 @@ import menus from "../data/menus.json";
 
 <style>
   .lotto-ball {
-    width: 58px;
-    height: 58px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    font-size: 1.4rem;
     font-weight: 900;
     color: #fff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -107,7 +109,62 @@ import menus from "../data/menus.json";
         b.title = m.name;
         machine.appendChild(b);
       });
+      var cands = document.getElementById("lotto-cands");
+      cands.innerHTML = "";
+      balls.forEach(function (m, i) {
+        var row = document.createElement("div");
+        row.style.cssText =
+          "font-size:.85rem;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
+        row.innerHTML =
+          '<span style="display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;color:#fff;font-weight:900;font-size:.8rem;background:' +
+          BALL_COLORS[i % BALL_COLORS.length] +
+          ';">' +
+          (i + 1) +
+          "</span> " +
+          esc(m.name);
+        cands.appendChild(row);
+      });
       resultEl.innerHTML = '<p style="color: var(--muted);">버튼을 누르면 공이 튑니다</p>';
+    }
+
+    function confetti() {
+      var c = document.createElement("canvas");
+      c.style.cssText =
+        "position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999;";
+      document.body.appendChild(c);
+      var x = c.getContext("2d");
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      var parts = [];
+      for (var i = 0; i < 80; i++) {
+        parts.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 220,
+          y: window.innerHeight / 3,
+          vx: (Math.random() - 0.5) * 13,
+          vy: -Math.random() * 11 - 2,
+          s: Math.random() * 7 + 3,
+          col: BALL_COLORS[i % BALL_COLORS.length],
+          rot: Math.random() * Math.PI,
+        });
+      }
+      var frames = 0;
+      (function tick() {
+        x.clearRect(0, 0, c.width, c.height);
+        parts.forEach(function (p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.45;
+          p.rot += 0.15;
+          x.save();
+          x.translate(p.x, p.y);
+          x.rotate(p.rot);
+          x.fillStyle = p.col;
+          x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+          x.restore();
+        });
+        if (++frames < 85) requestAnimationFrame(tick);
+        else c.remove();
+      })();
     }
 
     function draw() {
@@ -148,6 +205,7 @@ import menus from "../data/menus.json";
           esc(item.time) +
           "</div>" +
           link;
+        confetti();
         drawing = false;
         drawBtn.disabled = false;
         drawBtn.style.opacity = "1";

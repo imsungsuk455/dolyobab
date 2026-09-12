@@ -4,7 +4,7 @@ import menus from "../data/menus.json";
 
 <div class="card" id="ladder-box" style="text-align: center;">
   <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
-    출발 번호를 고르면 사다리를 타고 메뉴가 정해집니다
+    출발 번호를 고르면 사다리를 타고 메뉴가 정해집니다. 아래 후보를 먼저 확인하세요
   </p>
   <svg
     id="ladder-svg"
@@ -15,7 +15,7 @@ import menus from "../data/menus.json";
     <button class="cat-btn" id="ladder-reshuffle">🔀 후보 다시 섞기</button>
   </div>
   <div id="ladder-result" style="margin-top: 14px; min-height: 80px;">
-    <p style="color: var(--muted);">번호를 눌러 출발하세요</p>
+    <p style="color: var(--muted);">후보를 보고 번호를 눌러 출발하세요</p>
   </div>
 </div>
 
@@ -89,7 +89,7 @@ import menus from "../data/menus.json";
         }
         ys.forEach(function (y) { rungs.push({ gap: g, y: y }); });
       }
-      resultEl.innerHTML = '<p style="color: var(--muted);">번호를 눌러 출발하세요</p>';
+      resultEl.innerHTML = '<p style="color: var(--muted);">후보를 보고 번호를 눌러 출발하세요</p>';
       draw(null);
     }
 
@@ -119,12 +119,10 @@ import menus from "../data/menus.json";
           svg.appendChild(t);
         })(s);
       }
-      // 도착 칸 (물음표)
+      // 도착 메뉴 (출발 전에 공개 — 보고 싶은 메뉴가 있는 줄을 고르세요)
       for (var e = 0; e < N; e++) {
-        var ec = el("circle", { cx: xs(e), cy: BOTTOM + 22, r: 15, fill: "#fff3e6", stroke: "#e8590c", "stroke-width": 2 });
-        svg.appendChild(ec);
-        var et = el("text", { x: xs(e), y: BOTTOM + 27, "text-anchor": "middle", fill: "#e8590c", "font-size": 14, "font-weight": 900, id: "ladder-exit-" + e });
-        et.textContent = "?";
+        var et = el("text", { x: xs(e), y: BOTTOM + 24, "text-anchor": "middle", fill: "#495057", "font-size": 12, "font-weight": 800, id: "ladder-exit-" + e });
+        et.textContent = shortName(candidates[e].name);
         svg.appendChild(et);
       }
       // 이동 경로 하이라이트
@@ -208,7 +206,10 @@ import menus from "../data/menus.json";
         } else {
           var item = candidates[t.exit];
           var exitEl = document.getElementById("ladder-exit-" + t.exit);
-          if (exitEl) exitEl.textContent = shortName(item.name);
+          if (exitEl) {
+            exitEl.setAttribute("fill", "#e8590c");
+            exitEl.setAttribute("font-size", "14");
+          }
           var link = item.slug
             ? '<p style="margin-top:8px;"><a href="/recipes/' +
               esc(item.slug) +
