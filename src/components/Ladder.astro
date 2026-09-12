@@ -3,7 +3,10 @@ import menus from "../data/menus.json";
 ---
 
 <div class="card lift reveal" id="ladder-box" style="text-align: center;">
-  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
+  <div style="display:flex;justify-content:flex-end;">
+    <button class="sound-toggle" data-sound title="소리 켜기/끄기">🔊</button>
+  </div>
+  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 6px;">
     출발 번호를 고르면 사다리를 타고 메뉴가 정해집니다. 아래 후보를 먼저 확인하세요
   </p>
   <svg
@@ -38,6 +41,66 @@ import menus from "../data/menus.json";
     var candidates = [];
     var rungs = [];
     var running = false;
+
+    // 효과음 (WebAudio, 외부 파일 없음)
+    var AC = null;
+    function soundEnabled() {
+      try {
+        return localStorage.getItem("doly-sound") !== "off";
+      } catch (e) {
+        return true;
+      }
+    }
+    function ac() {
+      if (!AC) {
+        try {
+          AC = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {}
+      }
+      if (AC && AC.state === "suspended") AC.resume();
+      return AC;
+    }
+    function beep(freq, dur, type, vol, when) {
+      if (!soundEnabled()) return;
+      var c = ac();
+      if (!c) return;
+      try {
+        var t = c.currentTime + (when || 0);
+        var o = c.createOscillator();
+        var g = c.createGain();
+        o.type = type || "triangle";
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(vol || 0.15, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g);
+        g.connect(c.destination);
+        o.start(t);
+        o.stop(t + dur + 0.02);
+      } catch (e) {}
+    }
+    function blip() {
+      beep(880, 0.05, "sine", 0.08);
+    }
+    function ding() {
+      beep(1046.5, 0.15, "triangle", 0.16, 0);
+      beep(1318.5, 0.2, "triangle", 0.16, 0.13);
+    }
+    function syncSoundIcons() {
+      var off = !soundEnabled();
+      document.querySelectorAll("[data-sound]").forEach(function (b) {
+        b.textContent = off ? "🔇" : "🔊";
+      });
+    }
+    syncSoundIcons();
+    document.querySelectorAll("[data-sound]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        try {
+          localStorage.setItem("doly-sound", soundEnabled() ? "off" : "on");
+        } catch (e) {}
+        syncSoundIcons();
+      });
+    });
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, function (c) {
@@ -170,6 +233,12 @@ import menus from "../data/menus.json";
       running = true;
       var t = trace(idx);
       var pts = t.points;
+      // 가로대를 지날 때마다 소리 (x가 바뀌는 지점)
+      var rungIdxs = [];
+      for (var pi = 1; pi < pts.length; pi++) {
+        if (pts[pi][0] !== pts[pi - 1][0]) rungIdxs.push(pi);
+      }
+      var rungPtr = 0;
       // 전체 길이를 재서 일정 속도로 이동
       var total = 0;
       var segLens = [0];
@@ -201,6 +270,10 @@ import menus from "../data/menus.json";
           }
         }
         draw(shown);
+        while (rungPtr < rungIdxs.length && rungIdxs[rungPtr] < shown.length) {
+          blip();
+          rungPtr++;
+        }
         if (p < 1) {
           requestAnimationFrame(frame);
         } else {
@@ -230,6 +303,7 @@ import menus from "../data/menus.json";
             link2 +
             '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
             "</div>";
+          ding();
           running = false;
         }
       }

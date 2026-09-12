@@ -210,6 +210,25 @@ const canon = Astro.url.href;
       .btn:disabled {
         cursor: wait;
       }
+      .btn-big {
+        font-size: 1.3rem;
+        padding: 17px 52px;
+      }
+      .sound-toggle {
+        background: #fff;
+        border: 2px solid var(--ink);
+        border-radius: 999px;
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 var(--shadow);
+        font-family: inherit;
+        transition: transform 0.5s var(--spring);
+      }
+      .sound-toggle:active {
+        transform: scale(0.92);
+      }
       /* 프리미엄 CTA: pill + 원형 화살표 */
       .cta-pill {
         display: inline-flex;
@@ -311,11 +330,11 @@ const canon = Astro.url.href;
       /* 히어로 */
       .hero {
         text-align: center;
-        padding: 26px 0 6px;
+        padding: 16px 0 2px;
         position: relative;
       }
       .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         line-height: 1.28;
         font-weight: 900;
         letter-spacing: -0.035em;

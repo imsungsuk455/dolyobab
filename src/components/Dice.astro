@@ -3,7 +3,10 @@ import menus from "../data/menus.json";
 ---
 
 <div class="card lift reveal" id="dice-box" style="text-align: center;">
-  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 0;">
+  <div style="display:flex;justify-content:flex-end;">
+    <button class="sound-toggle" data-sound title="소리 켜기/끄기">🔊</button>
+  </div>
+  <p style="color: var(--muted); font-size: 0.9rem; margin-top: 6px;">
     후보 6개에 번호를 매겼습니다. 주사위를 굴리세요!
   </p>
 
@@ -21,7 +24,7 @@ import menus from "../data/menus.json";
   <div id="dice-cands" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0;text-align:left;"></div>
 
   <div>
-    <button class="btn" id="dice-roll">🎲 주사위 굴리기</button>
+    <button class="btn btn-big" id="dice-roll">🎲 주사위 굴리기</button>
   </div>
   <div style="margin-top: 10px;">
     <button class="cat-btn" id="dice-reshuffle">🔀 후보 다시 섞기</button>
@@ -114,6 +117,59 @@ import menus from "../data/menus.json";
     var rollBtn = document.getElementById("dice-roll");
     var balls = [];
     var rolling = false;
+
+    // 효과음 (WebAudio, 외부 파일 없음)
+    var AC = null;
+    function soundEnabled() {
+      try {
+        return localStorage.getItem("doly-sound") !== "off";
+      } catch (e) {
+        return true;
+      }
+    }
+    function ac() {
+      if (!AC) {
+        try {
+          AC = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {}
+      }
+      if (AC && AC.state === "suspended") AC.resume();
+      return AC;
+    }
+    function beep(freq, dur, type, vol, when) {
+      if (!soundEnabled()) return;
+      var c = ac();
+      if (!c) return;
+      try {
+        var t = c.currentTime + (when || 0);
+        var o = c.createOscillator();
+        var g = c.createGain();
+        o.type = type || "triangle";
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(vol || 0.15, t + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g);
+        g.connect(c.destination);
+        o.start(t);
+        o.stop(t + dur + 0.02);
+      } catch (e) {}
+    }
+    function syncSoundIcons() {
+      var off = !soundEnabled();
+      document.querySelectorAll("[data-sound]").forEach(function (b) {
+        b.textContent = off ? "🔇" : "🔊";
+      });
+    }
+    syncSoundIcons();
+    document.querySelectorAll("[data-sound]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        try {
+          localStorage.setItem("doly-sound", soundEnabled() ? "off" : "on");
+        } catch (e) {}
+        syncSoundIcons();
+      });
+    });
 
     function esc(s) {
       return String(s).replace(/[&<>"']/g, function (c) {
@@ -208,6 +264,15 @@ import menus from "../data/menus.json";
       rolling = true;
       rollBtn.disabled = true;
       rollBtn.style.opacity = "0.6";
+      // 구르는 동안 덜그럭 소리
+      var rattles = 0;
+      var rattleTimer = setInterval(function () {
+        if (++rattles > 7) {
+          clearInterval(rattleTimer);
+          return;
+        }
+        beep(700 + Math.random() * 900, 0.04, "square", 0.05);
+      }, 260);
       candsEl.querySelectorAll(".dice-cand").forEach(function (r) {
         r.classList.remove("dice-cand-win");
       });
@@ -247,6 +312,8 @@ import menus from "../data/menus.json";
           link +
           '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
           "</div>";
+        clearInterval(rattleTimer);
+        beep(150, 0.3, "sine", 0.28);
         confetti();
         rolling = false;
         rollBtn.disabled = false;
