@@ -1,8 +1,8 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
-// TODO: 도메인 확정 후 site 교체 (예: https://dolyobab.com)
+// 운영 도메인: https://dolyobab.org
 export default defineConfig({
-  site: "https://dolyobab.com",
+  site: "https://dolyobab.org",
   integrations: [sitemap()],
 });
