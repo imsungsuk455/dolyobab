@@ -1,6 +1,6 @@
 [
   { "name": "참치마요덮밥", "category": "한식", "situations": ["자취", "야식"], "time": "10분", "difficulty": "하", "slug": "chamchi-mayo-dupbap" },
-  { "name": "된장찌개", "category": "한식", "situations": ["자취", "집밥"], "time": "15분", "difficulty": "하", "slug": "doenjang-jjigae" },
+  { "name": "된장찌개", "category": "한식", "situations": ["자취", "집밥"], "time": "15분", "difficulty": "하", "slug": "doenjang-jjigae", "image": "/images/doenjang-jjigae-5.jpg" },
   { "name": "제육볶음", "category": "한식", "situations": ["집밥", "손님"], "time": "20분", "difficulty": "중", "slug": null },
   { "name": "비빔밥", "category": "한식", "situations": ["다이어트", "집밥"], "time": "15분", "difficulty": "하", "slug": null },
   { "name": "김치찌개", "category": "한식", "situations": ["집밥", "비오는날"], "time": "20분", "difficulty": "하", "slug": null },
