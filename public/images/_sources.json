@@ -1,0 +1,186 @@
+[
+  {
+    "name": "참치마요덮밥",
+    "slug": "stock-chamchi-mayo",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=164151818",
+    "title": "Salmon & Tuna Poke Bowl (M) with Spicy Mayo sauce - Kitokito 2025-04-25"
+  },
+  {
+    "name": "제육볶음",
+    "slug": "stock-jeyuk",
+    "status": "ok",
+    "license": "pdm",
+    "source": "https://www.flickr.com/photos/25802865@N08/54681201024",
+    "title": "Hunan Stir-Fried Pork"
+  },
+  {
+    "name": "비빔밥",
+    "slug": "stock-bibimbap",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=54768071",
+    "title": "Bibimbap 4"
+  },
+  {
+    "name": "김치찌개",
+    "slug": "stock-kimchi-jjigae",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=140860683",
+    "title": "Kimchi jjigae - Kogi, Brighton 2023-11-15"
+  },
+  {
+    "name": "불고기덮밥",
+    "slug": "stock-bulgogi",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=152187413",
+    "title": "Ttukbaegi bulgogi - Bulgogi(beef) hot pot - Kogi Korean cuisine 2024-09-03"
+  },
+  {
+    "name": "짜장면",
+    "slug": "stock-jjajang",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=178668598",
+    "title": "Jabokki - SOJU 2025-11-17"
+  },
+  {
+    "name": "짬뽕",
+    "slug": "stock-jjamppong",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.rawpixel.com/image/3282761/free-photo-image-asia-asian-cuisine",
+    "title": "Chopsticks pick noodles bowl full"
+  },
+  {
+    "name": "마라탕",
+    "slug": "stock-malatang",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.flickr.com/photos/35034347371@N01/2276961",
+    "title": "Chinese Hot Pot at Great China Hot Pot - 22"
+  },
+  {
+    "name": "돈가스",
+    "slug": "stock-tonkatsu",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://www.flickr.com/photos/91174746@N02/16348059955",
+    "title": "IMG_0270b"
+  },
+  {
+    "name": "라멘",
+    "slug": "stock-ramen",
+    "status": "ok",
+    "license": "pdm",
+    "source": "https://www.flickr.com/photos/57873306@N00/33129720913",
+    "title": "Ramen bowls for supper again."
+  },
+  {
+    "name": "초밥",
+    "slug": "stock-sushi",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.rawpixel.com/image/6819207/png-sticker-public-domain",
+    "title": "Sushi platter png sticker Japanese"
+  },
+  {
+    "name": "우동",
+    "slug": "stock-udon",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=57114792",
+    "title": "File:Udong.jpg"
+  },
+  {
+    "name": "토마토 파스타",
+    "slug": "stock-pasta",
+    "status": "rejected-mismatch",
+    "license": "pdm",
+    "source": "https://www.flickr.com/photos/8398907@N02/7809748008",
+    "title": "Pasta summer salad recipe"
+  },
+  {
+    "name": "샌드위치",
+    "slug": "stock-sandwich",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.flickr.com/photos/41890311@N06/35054403760",
+    "title": "A Cup of Coffee, a Sandwich and You (Explore)"
+  },
+  {
+    "name": "피자",
+    "slug": "stock-pizza",
+    "status": "ok",
+    "license": "pdm",
+    "source": "https://www.flickr.com/photos/123529748@N03/18092872879",
+    "title": "BBQ Chicken Pizza"
+  },
+  {
+    "name": "떡볶이",
+    "slug": "stock-tteokbokki",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=156805093",
+    "title": "Classic Korean Street Food"
+  },
+  {
+    "name": "김밥",
+    "slug": "stock-kimbap",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://wordpress.org/photos/photo/452690f40a/",
+    "title": "Maki rolls and sushi served with soy sauce, ginger, and wasabi paste at a restaurant in Dhaka, Bangladesh."
+  },
+  {
+    "name": "라볶이",
+    "slug": "stock-rabokki",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.rawpixel.com/image/6284595/image-public-domain-illustrations-red",
+    "title": "Ramen noodle bowl clipart illustration"
+  },
+  {
+    "name": "순대",
+    "slug": "stock-sundae",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=44795968",
+    "title": "Sundae"
+  },
+  {
+    "name": "닭가슴살 샐러드",
+    "slug": "stock-chicken-salad",
+    "status": "rejected-mismatch",
+    "license": "pdm",
+    "source": "https://www.flickr.com/photos/41284017@N08/51372526809",
+    "title": "20210805-FNS-PH-0008"
+  },
+  {
+    "name": "오트밀 죽",
+    "slug": "stock-oatmeal",
+    "status": "ok",
+    "license": "cc0",
+    "source": "https://www.rawpixel.com/image/5947147/free-public-domain-cc0-photo",
+    "title": null
+  },
+  {
+    "name": "두부 스테이크",
+    "slug": "stock-tofu-steak",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://commons.wikimedia.org/w/index.php?curid=181328478",
+    "title": "Yum Yum Tawau"
+  },
+  {
+    "name": "컵밥",
+    "slug": "stock-cupbap",
+    "status": "rejected-mismatch",
+    "license": "cc0",
+    "source": "https://www.flickr.com/photos/35034347371@N01/12196169",
+    "title": "Yummy ying yang fried rice at Top Cantonese Restaurant - 2"
+  }
+]
