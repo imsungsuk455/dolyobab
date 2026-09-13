@@ -1,5 +1,6 @@
 ---
 import menus from "../data/menus.json";
+import CustomPanel from "../components/CustomPanel.astro";
 
 const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)))];
 ---
@@ -35,62 +36,10 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
     <button class="btn btn-big" id="roulette-spin">🎡 돌리기</button>
   </div>
 
-  <div style="margin-top: 12px;">
-    <button class="cat-btn" id="custom-toggle" style="margin: 0;">＋ 내 메뉴 추가</button>
-  </div>
-  <div id="custom-panel" style="display: none; margin-top: 10px;">
-    <div style="display: flex; gap: 8px; justify-content: center;">
-      <input
-        id="custom-input"
-        maxlength="10"
-        placeholder="예: 김치찜"
-        style="width: 150px; border: 2px solid var(--ink); border-radius: 12px; padding: 8px 12px; font-size: 0.9rem; font-weight: 700; font-family: inherit; outline: none;"
-      />
-      <button class="cat-btn" id="custom-add" style="margin: 0;">추가</button>
-    </div>
-    <div id="custom-chips" style="margin-top: 10px;"></div>
-  </div>
+  <CustomPanel />
 
   <div id="roulette-result" style="margin-top: 18px; min-height: 90px;">
     <p style="color: var(--muted);">원판을 눌러도 돌아갑니다</p>
-  </div>
-</div>
-
-<div
-  id="roulette-modal"
-  style="display: none; position: fixed; inset: 0; z-index: 100; align-items: center; justify-content: center; padding: 20px; background: rgba(58, 46, 40, 0.55);"
->
-  <div
-    id="roulette-modal-card"
-    style="background: #fff; border: 2.5px solid var(--ink); border-radius: 22px; box-shadow: 6px 6px 0 var(--ink); max-width: 360px; width: 100%; overflow: hidden; text-align: center; transform: scale(0.9); opacity: 0; transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;"
-  >
-    <div style="position: relative; background: #fff3e6;">
-      <img
-        id="roulette-modal-img"
-        src=""
-        alt=""
-        style="display: none; width: 100%; height: 230px; object-fit: cover;"
-      />
-      <div id="roulette-modal-emoji" style="font-size: 4rem; padding: 30px 0 10px;">🍽️</div>
-      <button
-        id="roulette-modal-close"
-        aria-label="닫기"
-        style="position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--ink); background: #fff; font-size: 0.95rem; font-weight: 900; cursor: pointer;"
-      >
-        ✕
-      </button>
-    </div>
-    <div style="padding: 8px 20px 20px;">
-      <span class="stamp">돌려밥 주문서</span>
-      <div id="roulette-modal-name" class="receipt-name"></div>
-      <div id="roulette-modal-meta" class="receipt-meta"></div>
-      <div class="receipt-dash"></div>
-      <div id="roulette-modal-action"></div>
-      <div style="margin-top: 12px;">
-        <button class="cat-btn" id="roulette-modal-retry" style="margin: 0;">🎡 다시 돌리기</button>
-      </div>
-      <div class="receipt-foot">맛있게 드세요! 😋</div>
-    </div>
   </div>
 </div>
 
@@ -115,7 +64,16 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
     var resultEl = document.getElementById("roulette-result");
     var spinBtn = document.getElementById("roulette-spin");
 
-    // 효과음 (WebAudio, 외부 파일 없음)
+    function getAllCustoms() {
+      return window.DolyCustom ? window.DolyCustom.getAll() : [];
+    }
+    function mineItems() {
+      return getAllCustoms().map(function (n) {
+        return { name: n, category: "내 메뉴", situations: [], time: "-", difficulty: "-", slug: null, image: null, custom: true };
+      });
+    }
+
+    // 효과음
     var AC = null;
     function soundEnabled() {
       try {
@@ -177,7 +135,6 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       });
     });
 
-    // 선명한 원판을 위해 DPR 대응
     var dpr = window.devicePixelRatio || 1;
     var SIZE = 400;
     canvas.width = SIZE * dpr;
@@ -200,82 +157,6 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       return base;
     }
 
-    // 내 메뉴 ( localStorage 저장, 최대 12개 )
-    var customs = [];
-    try {
-      customs = JSON.parse(localStorage.getItem("doly-custom") || "[]");
-    } catch (e) {
-      customs = [];
-    }
-    if (!Array.isArray(customs)) customs = [];
-    function saveCustoms() {
-      try {
-        localStorage.setItem("doly-custom", JSON.stringify(customs.slice(0, 12)));
-      } catch (e) {}
-    }
-    function mineItems() {
-      return customs.map(function (n) {
-        return {
-          name: n,
-          category: "내 메뉴",
-          situations: [],
-          time: "-",
-          difficulty: "-",
-          slug: null,
-          image: null,
-          custom: true,
-        };
-      });
-    }
-
-    // 결과 모달 (음식 사진 크게)
-    var modal = document.getElementById("roulette-modal");
-    var modalCard = document.getElementById("roulette-modal-card");
-    function openModal(item) {
-      var img = document.getElementById("roulette-modal-img");
-      var emo = document.getElementById("roulette-modal-emoji");
-      if (item.image) {
-        img.src = item.image;
-        img.alt = item.name;
-        img.style.display = "block";
-        emo.style.display = "none";
-      } else {
-        img.removeAttribute("src");
-        img.style.display = "none";
-        emo.style.display = "block";
-      }
-      document.getElementById("roulette-modal-name").textContent = item.name;
-      document.getElementById("roulette-modal-meta").textContent = item.custom
-        ? "내가 추가한 메뉴"
-        : item.category + " · " + item.time + " · 난이도 " + item.difficulty;
-      var act = document.getElementById("roulette-modal-action");
-      if (item.slug) {
-        act.innerHTML =
-          '<a class="receipt-link" href="/recipes/' + esc(item.slug) + '/">👉 레시피 보기</a>';
-      } else if (item.custom) {
-        act.innerHTML =
-          '<div style="color:var(--muted);font-size:0.9rem;font-weight:700;">내 메뉴라 레시피는 없어요. 맛있게 드세요!</div>';
-      } else {
-        act.innerHTML =
-          '<div style="color:var(--muted);font-size:0.9rem;font-weight:700;">레시피 준비 중 — 그래도 오늘은 이거다!</div>';
-      }
-      modal.style.display = "flex";
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          modalCard.style.transform = "scale(1)";
-          modalCard.style.opacity = "1";
-        });
-      });
-    }
-    function closeModal() {
-      modalCard.style.transform = "scale(0.9)";
-      modalCard.style.opacity = "0";
-      setTimeout(function () {
-        modal.style.display = "none";
-      }, 250);
-    }
-
-    // 원판에 올릴 최대 8개 후보 선정
     function buildWheel() {
       var p = pool().slice();
       for (var i = p.length - 1; i > 0; i--) {
@@ -311,7 +192,6 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
         ctx.lineWidth = 3;
         ctx.stroke();
 
-        // 라벨
         ctx.save();
         ctx.translate(cx, cy);
         ctx.rotate(a0 + seg / 2);
@@ -326,7 +206,6 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
         ctx.restore();
       }
 
-      // 중앙 허브
       ctx.beginPath();
       ctx.arc(cx, cy, 50, 0, Math.PI * 2);
       ctx.fillStyle = "#3A2E28";
@@ -368,7 +247,8 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
         esc(item.category) + " · " + esc(item.time) + " · 난이도 " + esc(item.difficulty),
         item.slug
       );
-      openModal(item);
+      window.__dolyRetry = spin;
+      window.DolyModal.show(item, { stamp: "돌려밥 주문서" });
     }
 
     function confetti() {
@@ -426,11 +306,9 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       var n = wheelItems.length;
       var seg = (Math.PI * 2) / n;
       var winner = Math.floor(Math.random() * n);
-      // 포인터(위쪽, -90°)에 당첨 칸 중심이 오도록 목표 회전각 계산
       var target = -Math.PI / 2 - (winner + 0.5) * seg;
       var turns = Math.PI * 2 * (5 + Math.floor(Math.random() * 3));
       var start = rotation;
-      // 현재 각도에서 앞으로만 돌도록 보정
       var delta = ((target - start) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) + turns;
 
       var dur = 4200;
@@ -475,10 +353,11 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
         '<p style="color: var(--muted);">후보가 바뀌었습니다. 돌려보세요!</p>';
       buildWheel();
     }
+
     function ensureMineChip() {
       var wrap = document.getElementById("roulette-cats");
       var exists = wrap.querySelector('[data-cat="내 메뉴"]');
-      if (customs.length === 0) {
+      if (getAllCustoms().length === 0) {
         if (exists) {
           if (activeCat === "내 메뉴") {
             activeCat = "전체";
@@ -500,57 +379,6 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
         wrap.appendChild(nb);
       }
     }
-    function renderCustomChips() {
-      var cc = document.getElementById("custom-chips");
-      cc.innerHTML = "";
-      customs.forEach(function (n) {
-        var s = document.createElement("span");
-        s.style.cssText =
-          "display:inline-block;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:4px 8px 4px 12px;margin:0 6px 6px 0;font-size:.85rem;font-weight:800;";
-        s.textContent = n + " ";
-        var x = document.createElement("button");
-        x.textContent = "✕";
-        x.setAttribute("aria-label", n + " 삭제");
-        x.style.cssText =
-          "border:none;background:var(--sun);border-radius:50%;width:20px;height:20px;font-size:.7rem;font-weight:900;cursor:pointer;margin-left:4px;font-family:inherit;";
-        x.addEventListener("click", function () {
-          customs = customs.filter(function (c) {
-            return c !== n;
-          });
-          saveCustoms();
-          renderCustomChips();
-          ensureMineChip();
-          buildWheel();
-        });
-        s.appendChild(x);
-        cc.appendChild(s);
-      });
-    }
-    function addCustom() {
-      var inp = document.getElementById("custom-input");
-      var v = inp.value.trim().replace(/\s+/g, " ");
-      if (!v) return;
-      if (v.length > 10) {
-        inp.value = v.slice(0, 10);
-        return;
-      }
-      if (customs.indexOf(v) !== -1) {
-        inp.value = "";
-        inp.placeholder = "이미 있어요!";
-        return;
-      }
-      if (customs.length >= 12) {
-        inp.placeholder = "최대 12개까지!";
-        return;
-      }
-      customs.push(v);
-      inp.value = "";
-      inp.placeholder = "예: 김치찜";
-      saveCustoms();
-      renderCustomChips();
-      ensureMineChip();
-      buildWheel();
-    }
 
     box.querySelectorAll("#roulette-cats .cat-btn").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -558,24 +386,11 @@ const categories = ["전체", ...Array.from(new Set(menus.map((m) => m.category)
       });
     });
 
-    document.getElementById("custom-toggle").addEventListener("click", function () {
-      var p = document.getElementById("custom-panel");
-      p.style.display = p.style.display === "none" ? "block" : "none";
-    });
-    document.getElementById("custom-add").addEventListener("click", addCustom);
-    document.getElementById("custom-input").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") addCustom();
-    });
-    document.getElementById("roulette-modal-close").addEventListener("click", closeModal);
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) closeModal();
-    });
-    document.getElementById("roulette-modal-retry").addEventListener("click", function () {
-      closeModal();
-      setTimeout(spin, 260);
+    window.addEventListener("doly-custom-changed", function () {
+      ensureMineChip();
+      buildWheel();
     });
 
-    renderCustomChips();
     ensureMineChip();
     spinBtn.addEventListener("click", spin);
     canvas.addEventListener("click", spin);

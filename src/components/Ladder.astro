@@ -1,5 +1,6 @@
 ---
 import menus from "../data/menus.json";
+import CustomPanel from "../components/CustomPanel.astro";
 ---
 
 <div class="card lift reveal" id="ladder-box" style="text-align: center;">
@@ -17,6 +18,7 @@ import menus from "../data/menus.json";
   <div style="margin-top: 10px;">
     <button class="cat-btn" id="ladder-reshuffle">🔀 후보 다시 섞기</button>
   </div>
+  <CustomPanel />
   <div id="ladder-result" style="margin-top: 14px; min-height: 80px;">
     <p style="color: var(--muted);">후보를 보고 번호를 눌러 출발하세요</p>
   </div>
@@ -134,7 +136,10 @@ import menus from "../data/menus.json";
 
     function build() {
       running = false;
-      candidates = shuffle(MENUS.slice()).slice(0, N);
+      var customItems = (window.DolyCustom ? window.DolyCustom.getAll() : []).map(function (n) {
+        return { name: n, category: "내 메뉴", situations: [], time: "-", difficulty: "-", slug: null, image: null, custom: true };
+      });
+      candidates = shuffle(MENUS.concat(customItems)).slice(0, N);
       rungs = [];
       // 인접한 기둥 사이마다 가로대 3~4개, 세로 간격 확보
       for (var g = 0; g < N - 1; g++) {
@@ -304,6 +309,8 @@ import menus from "../data/menus.json";
             '<div class="receipt-foot">맛있게 드세요! 😋</div>' +
             "</div>";
           ding();
+          window.__dolyRetry = null;
+          window.DolyModal.show(item, { stamp: "사다리 도착!" });
           running = false;
         }
       }
@@ -311,6 +318,11 @@ import menus from "../data/menus.json";
     }
 
     document.getElementById("ladder-reshuffle").addEventListener("click", function () {
+      if (running) return;
+      build();
+    });
+
+    window.addEventListener("doly-custom-changed", function () {
       if (running) return;
       build();
     });

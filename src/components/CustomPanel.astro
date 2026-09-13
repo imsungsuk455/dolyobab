@@ -1,0 +1,109 @@
+<div data-custom-panel style="margin-top:12px;">
+  <button class="cat-btn" data-custom-toggle style="margin:0;">＋ 내 메뉴 추가</button>
+  <div data-custom-panel-body style="display:none; margin-top:10px;">
+    <div style="display:flex; gap:8px; justify-content:center;">
+      <input
+        data-custom-input
+        maxlength="10"
+        placeholder="예: 김치찜"
+        style="width:150px; border:2px solid var(--ink); border-radius:12px; padding:8px 12px; font-size:.9rem; font-weight:700; font-family:inherit; outline:none;"
+      />
+      <button class="cat-btn" data-custom-add style="margin:0;">추가</button>
+    </div>
+    <div data-custom-chips style="margin-top:10px;"></div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    if (!window.DolyCustom) {
+      window.DolyCustom = {
+        getAll: function () {
+          try {
+            var v = JSON.parse(localStorage.getItem("doly-custom") || "[]");
+            return Array.isArray(v) ? v : [];
+          } catch (e) {
+            return [];
+          }
+        },
+        save: function (list) {
+          try {
+            localStorage.setItem("doly-custom", JSON.stringify(list.slice(0, 12)));
+          } catch (e) {}
+        },
+        add: function (name) {
+          name = (name || "").trim().replace(/\s+/g, " ");
+          if (!name || name.length > 10) return { ok: false, reason: "invalid" };
+          var list = this.getAll();
+          if (list.indexOf(name) !== -1) return { ok: false, reason: "dup" };
+          if (list.length >= 12) return { ok: false, reason: "max" };
+          list.push(name);
+          this.save(list);
+          return { ok: true };
+        },
+        remove: function (name) {
+          var list = this.getAll().filter(function (n) {
+            return n !== name;
+          });
+          this.save(list);
+          return list;
+        },
+      };
+    }
+
+    function render(panel) {
+      var chips = panel.querySelector("[data-custom-chips]");
+      chips.innerHTML = "";
+      var list = window.DolyCustom.getAll();
+      list.forEach(function (n) {
+        var s = document.createElement("span");
+        s.style.cssText =
+          "display:inline-block;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:4px 8px 4px 12px;margin:0 6px 6px 0;font-size:.85rem;font-weight:800;";
+        s.textContent = n + " ";
+        var x = document.createElement("button");
+        x.textContent = "✕";
+        x.setAttribute("aria-label", n + " 삭제");
+        x.style.cssText =
+          "border:none;background:var(--sun);border-radius:50%;width:20px;height:20px;font-size:.7rem;font-weight:900;cursor:pointer;margin-left:4px;font-family:inherit;";
+        x.addEventListener("click", function () {
+          window.DolyCustom.remove(n);
+          render(panel);
+          window.dispatchEvent(new CustomEvent("doly-custom-changed"));
+        });
+        s.appendChild(x);
+        chips.appendChild(s);
+      });
+    }
+
+    document.querySelectorAll("[data-custom-panel]").forEach(function (panel) {
+      var body = panel.querySelector("[data-custom-panel-body]");
+      var inp = panel.querySelector("[data-custom-input]");
+      panel
+        .querySelector("[data-custom-toggle]")
+        .addEventListener("click", function () {
+          body.style.display = body.style.display === "none" ? "block" : "none";
+        });
+      function addNow() {
+        var res = window.DolyCustom.add(inp.value);
+        if (res.ok) {
+          inp.value = "";
+          inp.placeholder = "예: 김치찜";
+          render(panel);
+          window.dispatchEvent(new CustomEvent("doly-custom-changed"));
+        } else if (res.reason === "dup") {
+          inp.value = "";
+          inp.placeholder = "이미 있어요!";
+        } else if (res.reason === "max") {
+          inp.placeholder = "최대 12개까지!";
+        } else {
+          inp.placeholder = "예: 김치찜";
+        }
+      }
+      panel.querySelector("[data-custom-add]").addEventListener("click", addNow);
+      inp.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") addNow();
+      });
+      render(panel);
+    });
+  })();
+</script>

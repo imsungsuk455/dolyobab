@@ -1,5 +1,6 @@
 ---
 import menus from "../data/menus.json";
+import CustomPanel from "../components/CustomPanel.astro";
 ---
 
 <div class="card lift reveal" id="dice-box" style="text-align: center;">
@@ -29,6 +30,7 @@ import menus from "../data/menus.json";
   <div style="margin-top: 10px;">
     <button class="cat-btn" id="dice-reshuffle">🔀 후보 다시 섞기</button>
   </div>
+  <CustomPanel />
   <div id="dice-result" style="margin-top: 14px; min-height: 80px;">
     <p style="color: var(--muted);">버튼을 누르면 주사위가 구릅니다</p>
   </div>
@@ -200,7 +202,10 @@ import menus from "../data/menus.json";
     });
 
     function setup() {
-      balls = shuffle(MENUS.slice()).slice(0, 6);
+      var customItems = (window.DolyCustom ? window.DolyCustom.getAll() : []).map(function (n) {
+        return { name: n, category: "내 메뉴", situations: [], time: "-", difficulty: "-", slug: null, image: null, custom: true };
+      });
+      balls = shuffle(MENUS.concat(customItems)).slice(0, 6);
       candsEl.innerHTML = "";
       balls.forEach(function (m, i) {
         var row = document.createElement("div");
@@ -314,6 +319,8 @@ import menus from "../data/menus.json";
           "</div>";
         clearInterval(rattleTimer);
         beep(150, 0.3, "sine", 0.28);
+        window.__dolyRetry = roll;
+        window.DolyModal.show(item, { stamp: num + " 나옴!" });
         confetti();
         rolling = false;
         rollBtn.disabled = false;
@@ -323,6 +330,11 @@ import menus from "../data/menus.json";
 
     rollBtn.addEventListener("click", roll);
     document.getElementById("dice-reshuffle").addEventListener("click", function () {
+      if (rolling) return;
+      setup();
+    });
+
+    window.addEventListener("doly-custom-changed", function () {
       if (rolling) return;
       setup();
     });
