@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="페이지를 찾을 수 없습니다 | 돌려밥"
+  description="요청하신 페이지가 없습니다. 돌려밥 홈으로 돌아가세요."
+>
+  <section class="card reveal in" style="text-align:center; padding: 48px 22px;">
+    <div style="font-size:3rem;">🍚</div>
+    <h1 style="font-size:1.6rem;">페이지를 찾을 수 없습니다</h1>
+    <p style="color:var(--muted);">주소가 바뀌었거나 없는 페이지예요.</p>
+    <p style="margin-top:18px;">
+      <a class="cta-pill" href="/">
+        홈으로 돌아가기
+      </a>
+    </p>
+  </section>
+</BaseLayout>
