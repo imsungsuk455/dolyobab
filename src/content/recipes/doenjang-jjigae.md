@@ -5,6 +5,7 @@ category: "한식"
 situations: ["자취", "집밥"]
 time: "20분"
 difficulty: "하"
+image: "/images/doenjang-jjigae-5.jpg"
 pubDate: 2026-09-13
 ---
 

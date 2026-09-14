@@ -10,6 +10,7 @@ const recipes = defineCollection({
     situations: z.array(z.string()).default([]),
     time: z.string().optional(),
     difficulty: z.string().optional(),
+    image: z.string().optional(),
     pubDate: z.coerce.date(),
   }),
 });

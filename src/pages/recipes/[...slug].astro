@@ -15,15 +15,64 @@ const related = all
   .slice(0, 3);
 const fallback = all.filter((r) => r.id !== recipe.id).slice(0, 3);
 const more = related.length > 0 ? related : fallback;
+const SITE = "https://dolyobab.org";
+const pubDateObj =
+  recipe.data.pubDate instanceof Date ? recipe.data.pubDate : new Date(recipe.data.pubDate);
+const pubIso = pubDateObj.toISOString();
+const pubShort = pubIso.slice(0, 10);
+const pageUrl = `${SITE}/recipes/${recipe.id}/`;
+const defaultOg = `${SITE}/images/doenjang-jjigae-5.jpg`;
+const absImage = recipe.data.image ? new URL(recipe.data.image, SITE).href : undefined;
+const ogImage = absImage ?? defaultOg;
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: recipe.data.title,
+  description: recipe.data.description,
+  ...(absImage ? { image: [absImage] } : {}),
+  datePublished: pubIso,
+  dateModified: pubIso,
+  author: { "@type": "Person", name: "돌려밥 운영자", url: `${SITE}/about/` },
+  publisher: {
+    "@type": "Organization",
+    name: "돌려밥",
+    url: SITE,
+    logo: `${SITE}/favicon.svg`,
+  },
+  mainEntityOfPage: pageUrl,
+  inLanguage: "ko",
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "홈", item: `${SITE}/` },
+    { "@type": "ListItem", position: 2, name: "레시피", item: `${SITE}/recipes/` },
+    { "@type": "ListItem", position: 3, name: recipe.data.title, item: pageUrl },
+  ],
+};
 ---
 
-<BaseLayout title={`${recipe.data.title} | 돌려밥`} description={recipe.data.description}>
+<BaseLayout
+  title={`${recipe.data.title} | 돌려밥`}
+  description={recipe.data.description}
+  type="article"
+  image={recipe.data.image}
+  publishedTime={pubIso}
+  modifiedTime={pubIso}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <p style="color:var(--muted);font-size:0.9rem;">
+    <a href="/" style="color:var(--muted);">홈</a> ·
     <a href="/recipes/" style="color:var(--muted);">레시피</a> · {recipe.data.category}
     {recipe.data.time ? ` · ${recipe.data.time}` : ""}
     {recipe.data.difficulty ? ` · 난이도 ${recipe.data.difficulty}` : ""}
   </p>
   <h1 style="font-size:1.7rem;">{recipe.data.title}</h1>
+  <p style="color:var(--muted);font-size:0.88rem;">
+    돌려밥 운영자 직접 조리·촬영 · {pubShort} 발행
+  </p>
   <p style="color:var(--muted);">{recipe.data.description}</p>
   <article class="recipe-body card">
     <Content />
