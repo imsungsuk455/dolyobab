@@ -48,7 +48,7 @@
     "image": "/images/stock-bibimbap.jpg"
   },
   {
-    "name": "김치찌개",
+    "name": "스팸 김치찌개",
     "category": "한식",
     "situations": [
       "집밥",
@@ -57,7 +57,7 @@
     "time": "20분",
     "difficulty": "하",
     "slug": "kimchi-jjigae",
-    "image": "/images/stock-kimchi-jjigae.jpg"
+    "image": "/images/kimchi-jjigae-1.jpg"
   },
   {
     "name": "불고기덮밥",
