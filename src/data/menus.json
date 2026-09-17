@@ -200,8 +200,8 @@
     ],
     "time": "15분",
     "difficulty": "하",
-    "slug": null,
-    "image": "/images/stock-tteokbokki.jpg"
+    "slug": "tteokbokki",
+    "image": "/images/tteokbokki-1.jpg"
   },
   {
     "name": "김밥",
