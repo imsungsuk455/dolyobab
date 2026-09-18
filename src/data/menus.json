@@ -286,5 +286,17 @@
     "difficulty": "하",
     "slug": null,
     "image": "/images/ai-cupbap.jpg"
+  },
+  {
+    "name": "치즈 깍두기볶음밥",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "cheese-kkakdugi-bokkeumbap",
+    "image": "/images/cheese-kkakdugi-bokkeumbap-2.jpg"
   }
 ]
