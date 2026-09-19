@@ -298,5 +298,17 @@
     "difficulty": "하",
     "slug": "cheese-kkakdugi-bokkeumbap",
     "image": "/images/cheese-kkakdugi-bokkeumbap-2.jpg"
+  },
+  {
+    "name": "소시지 야채볶음",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "도시락"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "soseji-yachae-bokkeum",
+    "image": "/images/soseji-yachae-bokkeum-4.jpg"
   }
 ]
