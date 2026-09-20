@@ -310,5 +310,17 @@
     "difficulty": "하",
     "slug": "soseji-yachae-bokkeum",
     "image": "/images/soseji-yachae-bokkeum-4.jpg"
+  },
+  {
+    "name": "계란말이",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "도시락"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "gyeran-mari",
+    "image": "/images/gyeran-mari-3.jpg"
   }
 ]
