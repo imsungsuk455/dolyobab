@@ -322,5 +322,17 @@
     "difficulty": "하",
     "slug": "gyeran-mari",
     "image": "/images/gyeran-mari-3.jpg"
+  },
+  {
+    "name": "소고기 미역국",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "생일"
+    ],
+    "time": "25분",
+    "difficulty": "하",
+    "slug": "sogogi-miyeokguk",
+    "image": "/images/sogogi-miyeokguk-2.jpg"
   }
 ]
