@@ -334,5 +334,17 @@
     "difficulty": "하",
     "slug": "sogogi-miyeokguk",
     "image": "/images/sogogi-miyeokguk-2.jpg"
+  },
+  {
+    "name": "청양고추 어묵볶음",
+    "category": "한식",
+    "situations": [
+      "야식",
+      "술안주"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "cheongyang-eomuk-bokkeum",
+    "image": "/images/cheongyang-eomuk-bokkeum-6.jpg"
   }
 ]
