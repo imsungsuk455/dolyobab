@@ -346,5 +346,17 @@
     "difficulty": "하",
     "slug": "cheongyang-eomuk-bokkeum",
     "image": "/images/cheongyang-eomuk-bokkeum-6.jpg"
+  },
+  {
+    "name": "멸치 잔치국수",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "myeolchi-janchi-guksu",
+    "image": "/images/myeolchi-janchi-guksu-3.jpg"
   }
 ]
