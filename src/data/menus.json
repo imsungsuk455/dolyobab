@@ -73,7 +73,7 @@
   },
   {
     "name": "짜장면",
-    "category": "중식",
+    "category": "간편식",
     "situations": [
       "야식",
       "배달"
@@ -85,7 +85,7 @@
   },
   {
     "name": "짬뽕",
-    "category": "중식",
+    "category": "간편식",
     "situations": [
       "해장",
       "비오는날"
@@ -97,7 +97,7 @@
   },
   {
     "name": "마라탕",
-    "category": "중식",
+    "category": "간편식",
     "situations": [
       "스트레스",
       "모임"
@@ -109,7 +109,7 @@
   },
   {
     "name": "돈가스",
-    "category": "일식",
+    "category": "간편식",
     "situations": [
       "자취",
       "든든"
@@ -121,7 +121,7 @@
   },
   {
     "name": "라멘",
-    "category": "일식",
+    "category": "간편식",
     "situations": [
       "야식",
       "비오는날"
@@ -133,7 +133,7 @@
   },
   {
     "name": "초밥",
-    "category": "일식",
+    "category": "간편식",
     "situations": [
       "기념일",
       "외식"
@@ -145,7 +145,7 @@
   },
   {
     "name": "우동",
-    "category": "일식",
+    "category": "간편식",
     "situations": [
       "아플때",
       "든든"
@@ -157,7 +157,7 @@
   },
   {
     "name": "토마토 파스타",
-    "category": "양식",
+    "category": "간편식",
     "situations": [
       "자취",
       "손님"
@@ -169,7 +169,7 @@
   },
   {
     "name": "샌드위치",
-    "category": "양식",
+    "category": "간편식",
     "situations": [
       "다이어트",
       "아침"
@@ -181,7 +181,7 @@
   },
   {
     "name": "피자",
-    "category": "양식",
+    "category": "간편식",
     "situations": [
       "모임",
       "야식"
@@ -241,7 +241,7 @@
   },
   {
     "name": "닭가슴살 샐러드",
-    "category": "다이어트",
+    "category": "간편식",
     "situations": [
       "다이어트",
       "아침"
@@ -253,7 +253,7 @@
   },
   {
     "name": "오트밀 죽",
-    "category": "다이어트",
+    "category": "간편식",
     "situations": [
       "다이어트",
       "아플때"
@@ -265,7 +265,7 @@
   },
   {
     "name": "두부 스테이크",
-    "category": "다이어트",
+    "category": "간편식",
     "situations": [
       "다이어트",
       "집밥"
@@ -277,7 +277,7 @@
   },
   {
     "name": "컵밥",
-    "category": "편의점",
+    "category": "간편식",
     "situations": [
       "자취",
       "야식"
