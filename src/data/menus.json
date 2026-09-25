@@ -358,5 +358,17 @@
     "difficulty": "하",
     "slug": "myeolchi-janchi-guksu",
     "image": "/images/myeolchi-janchi-guksu-3.jpg"
+  },
+  {
+    "name": "매콤 두부조림",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "dubu-jorim",
+    "image": "/images/dubu-jorim-6.jpg"
   }
 ]
