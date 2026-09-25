@@ -18,7 +18,7 @@
       "자취",
       "집밥"
     ],
-    "time": "15분",
+    "time": "20분",
     "difficulty": "하",
     "slug": "doenjang-jjigae",
     "image": "/images/doenjang-jjigae-5.jpg"
@@ -33,19 +33,7 @@
     "time": "20분",
     "difficulty": "중",
     "slug": "jeyuk-bokkeum",
-    "image": "/images/ai-bulgogi.jpg"
-  },
-  {
-    "name": "비빔밥",
-    "category": "한식",
-    "situations": [
-      "다이어트",
-      "집밥"
-    ],
-    "time": "15분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/stock-bibimbap.jpg"
+    "image": "/images/jeyuk-bokkeum-1.jpg"
   },
   {
     "name": "스팸 김치찌개",
@@ -60,140 +48,8 @@
     "image": "/images/kimchi-jjigae-1.jpg"
   },
   {
-    "name": "불고기덮밥",
-    "category": "한식",
-    "situations": [
-      "자취",
-      "도시락"
-    ],
-    "time": "20분",
-    "difficulty": "중",
-    "slug": null,
-    "image": "/images/ai-bulgogi2.jpg"
-  },
-  {
-    "name": "짜장면",
-    "category": "간편식",
-    "situations": [
-      "야식",
-      "배달"
-    ],
-    "time": "배달 30분",
-    "difficulty": "배달",
-    "slug": null,
-    "image": "/images/stock-jjajang.jpg"
-  },
-  {
-    "name": "짬뽕",
-    "category": "간편식",
-    "situations": [
-      "해장",
-      "비오는날"
-    ],
-    "time": "배달 30분",
-    "difficulty": "배달",
-    "slug": null,
-    "image": "/images/ai-jjamppong.jpg"
-  },
-  {
-    "name": "마라탕",
-    "category": "간편식",
-    "situations": [
-      "스트레스",
-      "모임"
-    ],
-    "time": "외식",
-    "difficulty": "외식",
-    "slug": null,
-    "image": "/images/ai-malatang.jpg"
-  },
-  {
-    "name": "돈가스",
-    "category": "간편식",
-    "situations": [
-      "자취",
-      "든든"
-    ],
-    "time": "20분",
-    "difficulty": "중",
-    "slug": null,
-    "image": "/images/stock-tonkatsu.jpg"
-  },
-  {
-    "name": "라멘",
-    "category": "간편식",
-    "situations": [
-      "야식",
-      "비오는날"
-    ],
-    "time": "15분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/stock-ramen.jpg"
-  },
-  {
-    "name": "초밥",
-    "category": "간편식",
-    "situations": [
-      "기념일",
-      "외식"
-    ],
-    "time": "외식",
-    "difficulty": "외식",
-    "slug": null,
-    "image": "/images/ai-sushi.jpg"
-  },
-  {
-    "name": "우동",
-    "category": "간편식",
-    "situations": [
-      "아플때",
-      "든든"
-    ],
-    "time": "10분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/stock-udon.jpg"
-  },
-  {
-    "name": "토마토 파스타",
-    "category": "간편식",
-    "situations": [
-      "자취",
-      "손님"
-    ],
-    "time": "15분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/ai-pasta.jpg"
-  },
-  {
-    "name": "샌드위치",
-    "category": "간편식",
-    "situations": [
-      "다이어트",
-      "아침"
-    ],
-    "time": "10분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/ai-sandwich.jpg"
-  },
-  {
-    "name": "피자",
-    "category": "간편식",
-    "situations": [
-      "모임",
-      "야식"
-    ],
-    "time": "배달 30분",
-    "difficulty": "배달",
-    "slug": null,
-    "image": "/images/stock-pizza.jpg"
-  },
-  {
     "name": "떡볶이",
-    "category": "분식",
+    "category": "한식",
     "situations": [
       "스트레스",
       "야식"
@@ -202,90 +58,6 @@
     "difficulty": "하",
     "slug": "tteokbokki",
     "image": "/images/tteokbokki-1.jpg"
-  },
-  {
-    "name": "김밥",
-    "category": "분식",
-    "situations": [
-      "소풍",
-      "도시락"
-    ],
-    "time": "30분",
-    "difficulty": "중",
-    "slug": null,
-    "image": "/images/ai-kimbap.jpg"
-  },
-  {
-    "name": "라볶이",
-    "category": "분식",
-    "situations": [
-      "야식",
-      "매운맛"
-    ],
-    "time": "15분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/ai-rabokki.jpg"
-  },
-  {
-    "name": "순대",
-    "category": "분식",
-    "situations": [
-      "야식",
-      "술안주"
-    ],
-    "time": "포장",
-    "difficulty": "포장",
-    "slug": null,
-    "image": "/images/stock-sundae.jpg"
-  },
-  {
-    "name": "닭가슴살 샐러드",
-    "category": "간편식",
-    "situations": [
-      "다이어트",
-      "아침"
-    ],
-    "time": "10분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/ai-chicken-salad.jpg"
-  },
-  {
-    "name": "오트밀 죽",
-    "category": "간편식",
-    "situations": [
-      "다이어트",
-      "아플때"
-    ],
-    "time": "10분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/stock-oatmeal.jpg"
-  },
-  {
-    "name": "두부 스테이크",
-    "category": "간편식",
-    "situations": [
-      "다이어트",
-      "집밥"
-    ],
-    "time": "15분",
-    "difficulty": "중",
-    "slug": null,
-    "image": "/images/ai-tofu-steak.jpg"
-  },
-  {
-    "name": "컵밥",
-    "category": "간편식",
-    "situations": [
-      "자취",
-      "야식"
-    ],
-    "time": "5분",
-    "difficulty": "하",
-    "slug": null,
-    "image": "/images/ai-cupbap.jpg"
   },
   {
     "name": "치즈 깍두기볶음밥",
