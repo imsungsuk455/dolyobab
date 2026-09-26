@@ -142,5 +142,17 @@
     "difficulty": "하",
     "slug": "dubu-jorim",
     "image": "/images/dubu-jorim-6.jpg"
+  },
+  {
+    "name": "회오리 오므라이스",
+    "category": "양식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "20분",
+    "difficulty": "중",
+    "slug": "omurice",
+    "image": "/images/omurice-5.jpg"
   }
 ]
