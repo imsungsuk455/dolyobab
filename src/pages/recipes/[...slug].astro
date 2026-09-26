@@ -20,10 +20,41 @@ const pubDateObj =
   recipe.data.pubDate instanceof Date ? recipe.data.pubDate : new Date(recipe.data.pubDate);
 const pubIso = pubDateObj.toISOString();
 const pubShort = pubIso.slice(0, 10);
+// 갱신일: modDate가 있을 때만 사용, 없으면 발행일과 동일 (날짜 조작 금지)
+const modDateRaw = recipe.data.modDate ?? null;
+const modDateObj =
+  modDateRaw instanceof Date ? modDateRaw : modDateRaw ? new Date(modDateRaw) : pubDateObj;
+const modIso = modDateObj.toISOString();
+const modShort = modIso.slice(0, 10);
 const pageUrl = `${SITE}/recipes/${recipe.id}/`;
 const defaultOg = `${SITE}/images/doenjang-jjigae-5.jpg`;
 const absImage = recipe.data.image ? new URL(recipe.data.image, SITE).href : undefined;
 const ogImage = absImage ?? defaultOg;
+// FAQPage LD: 본문 "## 자주 묻는 질문"의 **Q.** 항목에서 단일 소스로 생성
+// (가시 텍스트와 동일 원천이므로 LD-화면 불일치 원천 차단, 항목 없으면 미출력)
+const faqPairs = [];
+const faqSection = (recipe.body ?? "").split("## 자주 묻는 질문")[1];
+if (faqSection) {
+  const re = /\*\*Q\.\s*(.+?)\*\*\s*\n([\s\S]*?)(?=\n\*\*Q\.|$)/g;
+  let m;
+  while ((m = re.exec(faqSection)) !== null) {
+    const q = `Q. ${m[1].trim()}`;
+    const a = m[2].replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+    if (q && a) faqPairs.push({ q, a });
+  }
+}
+const faqSchema =
+  faqPairs.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqPairs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }
+    : null;
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -31,13 +62,10 @@ const articleSchema = {
   description: recipe.data.description,
   ...(absImage ? { image: [absImage] } : {}),
   datePublished: pubIso,
-  dateModified: pubIso,
+  dateModified: modIso,
   author: { "@type": "Person", name: "돌려밥 운영자", url: `${SITE}/about/` },
   publisher: {
-    "@type": "Organization",
-    name: "돌려밥",
-    url: SITE,
-    logo: `${SITE}/favicon.svg`,
+    "@id": `${SITE}/#organization`,
   },
   mainEntityOfPage: pageUrl,
   inLanguage: "ko",
@@ -59,10 +87,11 @@ const breadcrumbSchema = {
   type="article"
   image={recipe.data.image}
   publishedTime={pubIso}
-  modifiedTime={pubIso}
+  modifiedTime={modIso}
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  {faqSchema && <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />}
   <p style="color:var(--muted);font-size:0.9rem;">
     <a href="/" style="color:var(--muted);">홈</a> ·
     <a href="/recipes/" style="color:var(--muted);">레시피</a> · {recipe.data.category}
@@ -71,7 +100,7 @@ const breadcrumbSchema = {
   </p>
   <h1 style="font-size:1.7rem;">{recipe.data.title}</h1>
   <p style="color:var(--muted);font-size:0.88rem;">
-    돌려밥 운영자 직접 조리·촬영 · {pubShort} 발행
+    돌려밥 운영자 직접 조리·촬영 · {pubShort} 발행{modShort !== pubShort ? ` · ${modShort} 갱신` : ""}
   </p>
   <p style="color:var(--muted);">{recipe.data.description}</p>
   <article class="recipe-body card">

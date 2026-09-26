@@ -12,6 +12,7 @@ const recipes = defineCollection({
     difficulty: z.string().optional(),
     image: z.string().optional(),
     pubDate: z.coerce.date(),
+    modDate: z.coerce.date().optional(),
   }),
 });
 
