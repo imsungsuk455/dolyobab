@@ -1,15 +1,36 @@
 User-agent: *
 Allow: /
 
-# AI 검색 인용 허용 (GEO): 검색용 크롤러는 명시적으로 허용
-# GPTBot(학습용) 차단이 ChatGPT Search 인용(OAI-SearchBot)에 영향 주지 않음
+# AI 검색 인용 허용 (GEO): 학습/검색색인/실시간fetch 용도별 명시
+# 인용 유입이 목표이므로 전부 Allow가 기본값
+User-agent: GPTBot
+Allow: /
+
 User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
 Allow: /
 
 User-agent: Claude-SearchBot
 Allow: /
 
+User-agent: Claude-User
+Allow: /
+
 User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
 Allow: /
 
 Sitemap: https://dolyobab.org/sitemap-index.xml
