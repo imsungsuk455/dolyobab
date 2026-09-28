@@ -166,5 +166,17 @@
     "difficulty": "하",
     "slug": "kare-rice",
     "image": "/images/kare-rice-5.jpg"
+  },
+  {
+    "name": "새우 브로콜리 크림파스타",
+    "category": "양식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "saeu-cream-pasta",
+    "image": "/images/saeu-cream-pasta-5.jpg"
   }
 ]
