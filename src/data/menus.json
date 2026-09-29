@@ -178,5 +178,17 @@
     "difficulty": "하",
     "slug": "saeu-cream-pasta",
     "image": "/images/saeu-cream-pasta-5.jpg"
+  },
+  {
+    "name": "등심 돈까스",
+    "category": "일식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "30분",
+    "difficulty": "중",
+    "slug": "donkkaseu",
+    "image": "/images/donkkaseu-6.jpg"
   }
 ]
