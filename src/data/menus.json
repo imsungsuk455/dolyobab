@@ -190,5 +190,17 @@
     "difficulty": "중",
     "slug": "donkkaseu",
     "image": "/images/donkkaseu-6.jpg"
+  },
+  {
+    "name": "무생채 비빔밥",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "20분",
+    "difficulty": "하",
+    "slug": "bibimbap",
+    "image": "/images/bibimbap-1.jpg"
   }
 ]
