@@ -202,5 +202,17 @@
     "difficulty": "하",
     "slug": "bibimbap",
     "image": "/images/bibimbap-1.jpg"
+  },
+  {
+    "name": "간장계란밥",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "10분",
+    "difficulty": "하",
+    "slug": "ganjang-gyeran-bap",
+    "image": "/images/ganjang-gyeran-bap-1.jpg"
   }
 ]
