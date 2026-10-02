@@ -214,5 +214,17 @@
     "difficulty": "하",
     "slug": "ganjang-gyeran-bap",
     "image": "/images/ganjang-gyeran-bap-1.jpg"
+  },
+  {
+    "name": "마파두부덮밥",
+    "category": "중식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "mapadubu-dupbap",
+    "image": "/images/mapadubu-dupbap-1.jpg"
   }
 ]
