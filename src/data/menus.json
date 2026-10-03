@@ -226,5 +226,17 @@
     "difficulty": "하",
     "slug": "mapadubu-dupbap",
     "image": "/images/mapadubu-dupbap-1.jpg"
+  },
+  {
+    "name": "콩나물국",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "10분",
+    "difficulty": "하",
+    "slug": "kongnamul-guk",
+    "image": "/images/kongnamul-guk-1.jpg"
   }
 ]

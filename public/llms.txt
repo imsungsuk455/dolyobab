@@ -27,6 +27,7 @@
 - [무생채비빔밥](https://dolyobab.org/recipes/bibimbap/)
 - [간장계란밥](https://dolyobab.org/recipes/ganjang-gyeran-bap/)
 - [마파두부덮밥](https://dolyobab.org/recipes/mapadubu-dupbap/)
+- [콩나물국](https://dolyobab.org/recipes/kongnamul-guk/)
 
 ## 핵심 사실
 - 모든 레시피는 운영자가 직접 조리하고 사진을 찍은 것만 게시합니다.
