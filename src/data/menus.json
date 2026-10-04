@@ -238,5 +238,17 @@
     "difficulty": "하",
     "slug": "kongnamul-guk",
     "image": "/images/kongnamul-guk-1.jpg"
+  },
+  {
+    "name": "닭가슴살 오이무침",
+    "category": "다이어트",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "10분",
+    "difficulty": "하",
+    "slug": "dakgaseumsal-oi-muchim",
+    "image": "/images/dakgaseumsal-oi-muchim-1.jpg"
   }
 ]
