@@ -250,5 +250,17 @@
     "difficulty": "하",
     "slug": "dakgaseumsal-oi-muchim",
     "image": "/images/dakgaseumsal-oi-muchim-1.jpg"
+  },
+  {
+    "name": "우엉조림",
+    "category": "한식",
+    "situations": [
+      "도시락",
+      "집밥"
+    ],
+    "time": "20분",
+    "difficulty": "중",
+    "slug": "ueong-jorim",
+    "image": "/images/ueong-jorim-1.jpg"
   }
 ]
