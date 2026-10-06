@@ -262,5 +262,17 @@
     "difficulty": "중",
     "slug": "ueong-jorim",
     "image": "/images/ueong-jorim-1.jpg"
+  },
+  {
+    "name": "짜파게티 소스 볶음밥",
+    "category": "중식",
+    "situations": [
+      "집밥",
+      "야식"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "jjajang-bokkeumbap",
+    "image": "/images/jjajang-bokkeumbap-1.jpg"
   }
 ]
