@@ -274,5 +274,17 @@
     "difficulty": "하",
     "slug": "jjajang-bokkeumbap",
     "image": "/images/jjajang-bokkeumbap-1.jpg"
+  },
+  {
+    "name": "규동",
+    "category": "일식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "20분",
+    "difficulty": "하",
+    "slug": "gyudon",
+    "image": "/images/gyudon-1.jpg"
   }
 ]
