@@ -286,5 +286,17 @@
     "difficulty": "하",
     "slug": "gyudon",
     "image": "/images/gyudon-1.jpg"
+  },
+  {
+    "name": "김치전",
+    "category": "한식",
+    "situations": [
+      "주말",
+      "비오는날"
+    ],
+    "time": "20분",
+    "difficulty": "하",
+    "slug": "kimchi-jeon",
+    "image": "/images/kimchi-jeon-1.jpg"
   }
 ]
