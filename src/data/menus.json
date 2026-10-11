@@ -145,7 +145,7 @@
   },
   {
     "name": "회오리 오므라이스",
-    "category": "양식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "주말"
@@ -157,7 +157,7 @@
   },
   {
     "name": "양파카레",
-    "category": "양식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "주말"
@@ -169,7 +169,7 @@
   },
   {
     "name": "새우 브로콜리 크림파스타",
-    "category": "양식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "주말"
@@ -181,7 +181,7 @@
   },
   {
     "name": "등심 돈까스",
-    "category": "일식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "주말"
@@ -217,7 +217,7 @@
   },
   {
     "name": "마파두부덮밥",
-    "category": "중식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "자취"
@@ -241,7 +241,7 @@
   },
   {
     "name": "닭가슴살 오이무침",
-    "category": "다이어트",
+    "category": "한식",
     "situations": [
       "집밥",
       "주말"
@@ -265,7 +265,7 @@
   },
   {
     "name": "짜파게티 소스 볶음밥",
-    "category": "중식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "야식"
@@ -277,7 +277,7 @@
   },
   {
     "name": "규동",
-    "category": "일식",
+    "category": "세계 요리",
     "situations": [
       "집밥",
       "자취"
