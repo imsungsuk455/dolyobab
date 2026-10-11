@@ -298,5 +298,17 @@
     "difficulty": "하",
     "slug": "kimchi-jeon",
     "image": "/images/kimchi-jeon-1.jpg"
+  },
+  {
+    "name": "계란찜",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "주말"
+    ],
+    "time": "10분",
+    "difficulty": "하",
+    "slug": "gyeran-jjim",
+    "image": "/images/gyeran-jjim-1.jpg"
   }
 ]
