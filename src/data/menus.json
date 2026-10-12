@@ -310,5 +310,17 @@
     "difficulty": "하",
     "slug": "gyeran-jjim",
     "image": "/images/gyeran-jjim-1.jpg"
+  },
+  {
+    "name": "김치볶음밥",
+    "category": "한식",
+    "situations": [
+      "집밥",
+      "자취"
+    ],
+    "time": "15분",
+    "difficulty": "하",
+    "slug": "kimchi-bokkeumbap",
+    "image": "/images/kimchi-bokkeumbap-1.jpg"
   }
 ]
