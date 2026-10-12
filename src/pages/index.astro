@@ -4,7 +4,11 @@ import Roulette from "../components/Roulette.astro";
 import { getCollection } from "astro:content";
 
 const recipes = await getCollection("recipes");
-const picks = recipes.slice(0, 3);
+// 최신 발행순으로 정렬 (getCollection은 id 알파벳순이므로 slice만 하면 옛글만 홈에 노출됨)
+const sorted = [...recipes].sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+const picks = sorted.slice(0, 3);
 ---
 
 <BaseLayout

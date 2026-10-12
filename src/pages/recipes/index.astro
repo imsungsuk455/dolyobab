@@ -9,6 +9,12 @@ for (const r of recipes) {
   if (!byCat[c]) byCat[c] = [];
   byCat[c].push(r);
 }
+// 카테고리 안에서는 최신 발행순
+for (const key of Object.keys(byCat)) {
+  byCat[key].sort(
+    (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+  );
+}
 ---
 
 <BaseLayout
